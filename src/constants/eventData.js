@@ -68,7 +68,7 @@ export const SCHEDULE = [
   },
   {
     time: '09:15 – 10:00',
-    title: '🐧 ¿Qué es Linux y cómo instalarlo?',
+    title: '🐧 Linux para todos: elige tu distribución y empieza hoy',
     description: 'Historia, distribuciones populares y proceso de instalación con dual boot.',
     type: 'talk',
   },
@@ -104,8 +104,8 @@ export const SCHEDULE = [
   },
   {
     time: '12:15 – 13:00',
-    title: '🤖 OpenClaw en Linux',
-    description: 'Automatización con agentes de IA usando OpenClaw integrado en entornos Linux.',
+    title: '🤖 n8n y OpenClaw en Linux',
+    description: 'Automatización de flujos de trabajo con n8n y OpenClaw en entornos Linux.',
     type: 'talk',
   },
   {
@@ -116,8 +116,8 @@ export const SCHEDULE = [
   },
   {
     time: '13:15 – 14:00',
-    title: '⚙️ Automatizaciones con n8n y Docker',
-    description: 'Flujos de trabajo con n8n y despliegue portable de servicios con Docker.',
+    title: '🌐 Desarrollo Web y Mobile Open Source',
+    description: 'Frameworks open source para desarrollo web y mobile, herramientas de despliegue y CI/CD.',
     type: 'talk',
   },
   {
@@ -152,8 +152,8 @@ export const SCHEDULE = [
   },
   {
     time: '16:15 – 17:00',
-    title: '💻 Herramientas Open Source para Desarrolladores',
-    description: 'Git, GitLab, editores libres, contenedores y DevOps con herramientas open source.',
+    title: '⛓️ Blockchain y Web3',
+    description: 'Tecnologías blockchain, contratos inteligentes, DApps y herramientas open source para Web3.',
     type: 'talk',
   },
   {
@@ -164,8 +164,8 @@ export const SCHEDULE = [
   },
   {
     time: '17:15 – 18:00',
-    title: '🌐 Comunidad y Contribución al Software Libre',
-    description: 'Cómo contribuir en GitHub, encontrar proyectos y crecer profesionalmente en open source.',
+    title: '💻 Herramientas Open Source para Desarrolladores',
+    description: 'Git, GitLab, editores libres, contenedores y DevOps con herramientas open source.',
     type: 'talk',
   },
   {
