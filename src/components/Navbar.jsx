@@ -92,7 +92,7 @@ function Navbar() {
             Inscríbete
           </a>
           <a
-            href="https://drive.google.com/file/d/1euXPc8949nZAyICDaTIQmxKYD3NgL8n0/view?usp=sharing"
+            href="https://felices25ruth.my.canva.site/brochure-flisol-utp-2026-sponsor"
             target="_blank"
             rel="noreferrer"
             className="hidden rounded-full border border-flisol-orange px-4 py-2 text-sm font-semibold text-white bg-flisol-orange transition duration-300 hover:scale-105 hover:bg-orange-500 sm:inline-flex"
