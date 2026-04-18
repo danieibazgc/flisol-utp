@@ -23,6 +23,11 @@ const stats = [
   },
 ]
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+}
+
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -44,7 +49,8 @@ function AboutFlisol() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-100px' }}
+          variants={containerVariants}
           className="space-y-12"
         >
           <div className="space-y-6">
@@ -91,7 +97,8 @@ function AboutFlisol() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-100px' }}
+          variants={containerVariants}
           className="space-y-4"
         >
           {stats.map((stat) => (

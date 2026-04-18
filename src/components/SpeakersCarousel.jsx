@@ -12,6 +12,16 @@ const InstagramIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
 );
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+}
+
 const SpeakersCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
@@ -51,30 +61,42 @@ const SpeakersCarousel = () => {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Editorial Header */}
-      <div className="mb-12 space-y-6 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 text-flisol-orange">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-100px' }}
+        variants={containerVariants}
+        className="mb-12 space-y-6 px-4 sm:px-6 lg:px-8"
+      >
+        <motion.div variants={itemVariants} className="flex items-center gap-4 text-flisol-orange">
           <div className="h-px w-12 bg-flisol-orange/50" />
           <span className={typography.sectionLabel}>Expertos de la Industria</span>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <h2 className={typography.sectionTitle}>
+          <motion.h2 variants={itemVariants} className={typography.sectionTitle}>
             LÍDERES DE LA <br />
             <span className="outline-text text-white/10 uppercase">REVOLUCIÓN</span>
-          </h2>
+          </motion.h2>
 
-          <div className="flex items-center gap-4">
+          <motion.div variants={itemVariants} className="flex items-center gap-4">
             <button onClick={prevSlide} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white transition-all duration-300 hover:border-flisol-orange hover:bg-flisol-orange">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button onClick={nextSlide} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white transition-all duration-300 hover:border-flisol-orange hover:bg-flisol-orange">
               <ChevronRight className="h-5 w-5" />
             </button>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="relative overflow-visible px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={containerVariants}
+        className="relative overflow-visible px-4 sm:px-6 lg:px-8"
+      >
         <motion.div
           className="flex transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
           animate={{ x: `-${activeIndex * (100 / slidesToShow)}%` }}
@@ -117,7 +139,7 @@ const SpeakersCarousel = () => {
             </div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {selectedSpeaker && (
