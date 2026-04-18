@@ -133,3 +133,12 @@ button:focus-visible,
 section[id] {
   scroll-margin-top: 5rem;
 }
+
+/* ─── Hide scrollbar (modal interno) ─── */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

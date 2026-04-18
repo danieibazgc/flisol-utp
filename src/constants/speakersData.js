@@ -31,8 +31,8 @@ export const speakersData = [
     linkedin: "https://www.linkedin.com/in/jfloresxc/",
     image: "https://sessionize.com/image/f2d2-400o400o1-fcKCgWEkNB4VsFtWRWvYBC.png",
     bio: "Jose Flores Chamba es Ingeniero de Sistemas y Senior Front-End Developer con experiencia en entornos de alta demanda. Es uno de los organizadores de GDG Open Lima, uno de los grupos de desarrolladores de Google más representativos del Perú, donde lidera iniciativas de aprendizaje en tecnologías web, cloud y móvil. Además, ocupa la presidencia del Área de Programación del IEEE Computer Society de su capítulo estudiantil, promoviendo el desarrollo técnico y la cultura open source entre la comunidad universitaria. Su trabajo cotidiano combina el desarrollo frontend de producción con la investigación de herramientas emergentes que potencian la experiencia del desarrollador.",
-    sessionTitle: "Chrome DevTools + Antigravity: Debugging con Superpoderes",
-    sessionDesc: "En esta sesión vamos a ver cómo Antigravity permite que agentes de IA (como Claude o Gemini) tomen el control de las DevTools. Veremos cómo arreglar bugs de CSS, analizar el Performance y manipular el DOM en tiempo real usando lenguaje natural. ¡El fin del \"inspeccionar elemento\" manual ha llegado!"
+    sessionTitle: "¿No sabes diseñar una web? Skills y Agentes de IA al rescate",
+    sessionDesc: "¡Es hora de llevar tu web al siguiente nivel! 🚀 En esta charla descubrirás cómo hemos transformado el sitio del evento usando el poder de los Agentes de IA. 🤖✨ Aprenderás a implementar Skills y Rules para optimizar tipografías, espaciados e interacciones de forma automática y sencilla. 💻 No necesitas ser un experto en diseño; solo necesitas estar atento para lograr resultados increíbles. ⚡"
   },
   {
     id: 4,

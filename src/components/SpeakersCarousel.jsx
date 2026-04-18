@@ -111,7 +111,7 @@ const SpeakersCarousel = () => {
                 <div className="absolute top-4 right-4 z-10">
                   <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 backdrop-blur-md">
                     <div className="h-1.5 w-1.5 rounded-full bg-flisol-orange animate-pulse" />
-                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live_Profile</span>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Speaker</span>
                   </div>
                 </div>
 
@@ -157,28 +157,53 @@ const SpeakersCarousel = () => {
               <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-flisol-orange/10 blur-[120px] rounded-full pointer-events-none" />
               <button className="absolute top-8 right-8 z-50 h-12 w-12 flex items-center justify-center rounded-full bg-white/5 text-white border border-white/10 hover:bg-flisol-orange transition-all" onClick={() => setSelectedSpeaker(null)}><X className="h-6 w-6" /></button>
 
-              <div className="flex flex-col lg:flex-row h-full max-h-[85vh] overflow-y-auto custom-scrollbar">
-                <div className="lg:w-5/12 p-8 md:p-12 lg:sticky lg:top-0">
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-900 shadow-2xl">
-                    <img src={selectedSpeaker.image} alt={selectedSpeaker.name} className="h-full w-full object-cover" />
+              <div className="flex flex-col lg:flex-row h-full max-h-[85vh] overflow-y-auto hide-scrollbar">
+
+                {/* Imagen */}
+                <div className="lg:w-5/12 pt-10 pb-4 px-8 md:p-10 flex items-center justify-center lg:sticky lg:top-0">
+                  <div className="relative">
+                    <div className="absolute -inset-6 bg-flisol-orange/20 blur-3xl rounded-full opacity-40" />
+                    <img
+                      src={selectedSpeaker.image}
+                      alt={selectedSpeaker.name}
+                      className="relative w-44 h-44 sm:w-60 sm:h-60 lg:w-72 lg:h-72 rounded-full object-cover ring-2 ring-flisol-orange/30 shadow-2xl"
+                    />
                   </div>
                 </div>
-                <div className="lg:w-7/12 p-8 md:p-12 lg:pl-0 space-y-12">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3"><span className="h-px w-8 bg-flisol-orange" /><span className="text-[10px] font-bold uppercase tracking-[0.3em] text-flisol-orange">Speaker Perfil</span></div>
-                    <h3 className="font-display text-5xl md:text-7xl font-extrabold text-white leading-[0.9] tracking-tight">{selectedSpeaker.name.split(' ')[0]} <br /><span className="text-white/40">{selectedSpeaker.name.split(' ').slice(1).join(' ')}</span></h3>
-                    <p className="text-xl text-zinc-400 font-medium">{selectedSpeaker.role}</p>
+
+                {/* Contenido */}
+                <div className="lg:w-7/12 p-8 md:p-10 lg:pl-0 space-y-8">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <span className="h-px w-8 bg-flisol-orange" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-flisol-orange">Speaker Perfil</span>
+                    </div>
+                    <h3 className="font-display text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tight">
+                      {selectedSpeaker.name.split(' ')[0]} <br />
+                      <span className="text-white/40">{selectedSpeaker.name.split(' ').slice(1).join(' ')}</span>
+                    </h3>
+                    <p className="text-base text-zinc-400 font-light">{selectedSpeaker.role}</p>
                   </div>
-                  <div className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/10 backdrop-blur-md space-y-6">
-                    <div className="flex items-center justify-between"><div className="inline-flex items-center gap-2 rounded-full bg-flisol-orange/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-flisol-orange">Track: {selectedSpeaker.track}</div></div>
-                    <div className="space-y-3"><h4 className="font-display text-2xl md:text-3xl font-bold text-white leading-tight">{selectedSpeaker.sessionTitle}</h4><p className="text-zinc-400 text-sm leading-relaxed font-light italic">"{selectedSpeaker.sessionDesc}"</p></div>
+
+                  <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-flisol-orange/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-flisol-orange">
+                      {selectedSpeaker.track}
+                    </div>
+                    <h4 className="font-display text-xl sm:text-2xl font-bold text-white leading-tight">{selectedSpeaker.sessionTitle}</h4>
+                    <p className="text-zinc-400 text-sm leading-relaxed font-light italic">"{selectedSpeaker.sessionDesc}"</p>
                   </div>
-                  <div className="space-y-4"><h5 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-600">Background</h5><p className="text-zinc-400 leading-relaxed text-sm text-justify font-light">{selectedSpeaker.bio}</p></div>
-                  <div className="flex flex-wrap gap-4 pt-4 pb-12">
-                    {selectedSpeaker.linkedin && <a href={selectedSpeaker.linkedin} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-white text-black hover:bg-flisol-orange hover:text-white transition-all"><LinkedinIcon /><span className="text-xs font-bold uppercase tracking-widest">LinkedIn</span></a>}
-                    {selectedSpeaker.instagram && <a href={selectedSpeaker.instagram} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-zinc-900 border border-white/10 text-white hover:border-flisol-orange/50 transition-all"><InstagramIcon /><span className="text-xs font-bold uppercase tracking-widest">Instagram</span></a>}
+
+                  <div className="space-y-3">
+                    <h5 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-600">Background</h5>
+                    <p className="text-zinc-400 leading-relaxed text-sm font-light">{selectedSpeaker.bio}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pb-8">
+                    {selectedSpeaker.linkedin && <a href={selectedSpeaker.linkedin} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-white text-black hover:bg-flisol-orange hover:text-white transition-all"><LinkedinIcon /><span className="text-[10px] font-bold uppercase tracking-widest">LinkedIn</span></a>}
+                    {selectedSpeaker.instagram && <a href={selectedSpeaker.instagram} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-zinc-900 border border-white/10 text-white hover:border-flisol-orange/50 transition-all"><InstagramIcon /><span className="text-[10px] font-bold uppercase tracking-widest">Instagram</span></a>}
                   </div>
                 </div>
+
               </div>
             </motion.div>
           </motion.div>

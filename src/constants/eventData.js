@@ -91,7 +91,7 @@ export const SCHEDULE = [
   },
   {
     time: '11:30am - 12:20pm',
-    title: 'Chrome DevTools + Antigravity: Debugging con Superpoderes',
+    title: '¿No sabes diseñar una web? Skills y Agentes de IA al rescate',
     description: 'A cargo de Jose Flores Chamba',
     type: 'talk',
   },
