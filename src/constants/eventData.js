@@ -68,7 +68,7 @@ export const SCHEDULE = [
   {
     time: '09:20am - 10:10am',
     title: 'Flutter Play: Creando Juegos Multiplataforma',
-    description: 'A cargo de Angela Irka Enciso Camacho',
+    description: 'A cargo de Angela Enciso Camacho',
     type: 'talk',
   },
   {
@@ -80,7 +80,7 @@ export const SCHEDULE = [
   {
     time: '10:20am - 11:10am',
     title: 'Bypassing MFA - Microsoft',
-    description: 'A cargo de Gianpaul Jesús Custodio Chavarría',
+    description: 'A cargo de Gianpaul Custodio (Aka. HackeMate)',
     type: 'talk',
   },
   {
@@ -104,7 +104,7 @@ export const SCHEDULE = [
   {
     time: '12:30pm - 01:20pm',
     title: 'Tu código no habla solo: habilidades humanas para crecer en el mundo open source',
-    description: 'A cargo de Hugo Alberto Casanova Mercado',
+    description: 'A cargo de Hugo Casanova',
     type: 'talk',
   },
   {
@@ -116,7 +116,7 @@ export const SCHEDULE = [
   {
     time: '01:40pm - 02:30pm',
     title: 'Mi primera cita con... opencode: tu mejor compañero de coding',
-    description: 'A cargo de Brayan Roberto Ccarita Cruz',
+    description: 'A cargo de Brayan Ccarita',
     type: 'talk',
   },
   {
@@ -128,7 +128,7 @@ export const SCHEDULE = [
   {
     time: '02:40pm - 03:30pm',
     title: 'IA Local con Software Libre: Tu propio asistente inteligente sin internet ni suscripción',
-    description: 'A cargo de Henry Keniding Tarazona Lazaro',
+    description: 'A cargo de Henry Keniding Tarazona',
     type: 'talk',
   },
   {
