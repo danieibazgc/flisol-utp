@@ -28,20 +28,17 @@ function Navbar() {
   }, [isOpen])
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-[100] flex justify-center p-0 sm:p-4 transition-all duration-500">
+    <nav className={`fixed top-0 left-0 right-0 z-[100] w-full transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl shadow-md' : 'bg-transparent'}`}>
       <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`relative flex w-full max-w-7xl items-center justify-between border-b sm:border sm:rounded-2xl px-6 py-3 sm:px-8 sm:py-3 transition-all duration-500 ${scrolled
-          ? 'border-white/10 bg-black/60 backdrop-blur-xl shadow-2xl'
-          : 'border-transparent bg-transparent'
-          }`}
+        className="mx-auto flex w-full max-w-screen-2xl flex-wrap items-center justify-between px-6 py-3 md:px-12 lg:px-16"
       >
         {/* LOGO OFICIAL */}
         <a href="#inicio" className="flex items-center gap-3 group relative">
           <img
-            src={EVENT.logoFlisol}
-            alt="FLISoL UTP"
+            src="/images/lead-utp-logo.png"
+            alt="LEAD UTP"
             className="h-12 md:h-14 w-auto transition-all group-hover:scale-105"
           />
         </a>
@@ -93,8 +90,8 @@ function Navbar() {
             <div className="flex items-center justify-between p-6 sm:p-8 border-b border-white/5">
               <div className="flex items-center gap-3">
                 <img
-                  src={EVENT.logoFlisol}
-                  alt="FLISoL UTP"
+                  src="/images/lead-utp-logo.png"
+                  alt="LEAD UTP"
                   className="h-12 w-auto transition-all group-hover:scale-105"
                 />
               </div>

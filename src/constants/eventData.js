@@ -19,6 +19,7 @@ export const EVENT = {
   city: 'Lima',
   country: 'Perú',
   locationFull: 'Universidad Tecnológica del Perú – Lima',
+  auditorium: 'Auditorio UTP Torre Arequipa, Lima',
 
   // Costo
   cost: '¡Totalmente gratuito!',

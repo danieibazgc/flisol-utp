@@ -58,7 +58,7 @@ export const speakersData = [
     linkedin: "https://www.linkedin.com/in/natzull/",
     image: "https://sessionize.com/image/ea33-400o400o1-QDDyXDRbfpqC1xb3rmNgqb.png",
     bio: "Brayan Ccarita es desarrollador de software con especialización en servicios cloud de Microsoft Azure. Con un perfil orientado a la democratización de las herramientas tecnológicas, su misión es hacer que tecnologías complejas como la inteligencia artificial y la infraestructura cloud sean accesibles y prácticas para otros desarrolladores. Es IBM Z Student Ambassador y entusiasta de las herramientas open source y los agentes de IA, combina su experiencia en Azure con el interés por nuevas formas de programar asistidas por inteligencia artificial.",
-    sessionTitle: "Mi primera cita con... opencode: tu mejor compañero de coding.",
+    sessionTitle: "Mi primera cita con... opencode: tu mejor compañero de coding",
     sessionDesc: "¿Te imaginas tener a un fiel compañero de coding sentado a tu lado, listo para ayudarte las 24 horas del día? De eso se trata OpenCode.\n\nEn esta charla introductoria, vamos a descubrir cómo este agente de Inteligencia Artificial está cambiando la forma en que escribimos software. No vamos a hablar de teorías complejas, sino de cómo puedes usar esta herramienta hoy mismo para programar más rápido, cometer menos errores y, sobre todo, dejar de pelearte con las tareas repetitivas."
   },
   {

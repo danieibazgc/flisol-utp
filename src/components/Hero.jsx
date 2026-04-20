@@ -45,94 +45,83 @@ function Hero() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative mx-auto w-full max-w-7xl"
+        className="relative mx-auto w-full max-w-7xl pt-10"
       >
-        {/* Título masivo full-width */}
-        <motion.h1
-          variants={itemVariants}
-          className="mt-8 font-display font-black tracking-tighter leading-[0.82] text-white"
-        >
-          <div className="text-[clamp(4rem,14vw,10rem)]">FLISOL</div>
-          <div className="flex flex-wrap items-end gap-3 sm:gap-5">
-            <span className="text-[clamp(4rem,14vw,10rem)] text-flisol-orange">UTP</span>
-            <span className="outline-text text-white/15 text-[clamp(2.8rem,9vw,6.5rem)] pb-1">
-              LIMA '26
-            </span>
-          </div>
-        </motion.h1>
-
-        {/* Franja inferior: descripción + CTAs | countdown */}
-        <div className="mt-14 sm:mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-end">
-
-          {/* Izquierda: descripción, CTAs, metadata */}
-          <motion.div variants={itemVariants} className="space-y-8">
-            <p className="text-base text-zinc-400 max-w-md leading-relaxed font-light">
-              El mayor festival de Software Libre de Latinoamérica. Charlas, talleres e instalaciones en la Universidad Tecnológica del Perú. Entrada gratuita.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#registro"
-                className="group inline-flex items-center gap-3 rounded-full bg-flisol-orange px-8 py-3.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-glow transition-all hover:scale-105"
-              >
-                Inscribirme
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href="#agenda"
-                className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-white/10"
-              >
-                Ver Agenda
-              </a>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-5 pt-4 border-t border-white/5">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-3.5 w-3.5 text-zinc-600" />
-                <span className="text-sm font-bold text-white">25 Abril, 2026</span>
-              </div>
-              <div className="h-4 w-px bg-white/10" />
-              <div className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-zinc-600" />
-                <span className="text-sm font-bold text-white">Torre Arequipa, Lima</span>
-              </div>
-              <div className="h-4 w-px bg-white/10" />
-              <span className="text-sm font-bold text-flisol-orange">Acceso Gratuito</span>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Logo a la izquierda */}
+          <motion.div variants={itemVariants} className="flex justify-center lg:justify-end pr-0 lg:pr-8">
+            <img 
+              src="/images/flisol-utp-logo.png" 
+              alt="FLISoL UTP 2026" 
+              className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px]" 
+            />
           </motion.div>
 
-          {/* Derecha: countdown limpio */}
-          <motion.div variants={itemVariants} className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-px w-8 bg-flisol-orange/40" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-600">
-                Cuenta regresiva
-              </span>
+          {/* Información a la derecha */}
+          <motion.div variants={itemVariants} className="flex flex-col items-center text-center space-y-8 lg:items-center">
+            
+            <div className="inline-flex items-center rounded-3xl border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium text-zinc-300">
+              25 de abril · UTP Torre Arequipa, Lima, Perú
             </div>
 
-            <div className="grid grid-cols-4 gap-2 sm:gap-3">
+            <div className="space-y-4">
+              <h1 className="font-display leading-none tracking-tight text-white mb-6">
+                <div className="text-6xl sm:text-7xl lg:text-[5.5rem] font-bold">
+                  FLISoL <span className="text-flisol-orange">UTP</span>
+                </div>
+                <div className="text-6xl sm:text-7xl lg:text-[5.5rem] font-bold mt-2">
+                  2026
+                </div>
+              </h1>
+              
+              <p className="text-lg sm:text-xl font-medium text-zinc-200 px-4">
+                Festival Latinoamericano de Instalación de Software Libre
+              </p>
+              
+              <p className="text-sm sm:text-base text-zinc-400 max-w-sm mx-auto leading-relaxed">
+                Un día entero de charlas y talleres de software libre.<br />
+                Organizado por LEAD UTP.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <a
+                href="#registro"
+                className="group inline-flex items-center gap-2 rounded-full border border-flisol-orange bg-flisol-orange/10 hover:bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-flisol-orange transition-all"
+              >
+                Inscríbete
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="#que-es-flisol"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 lg:bg-transparent px-6 py-2.5 hover:bg-white/[0.08] text-sm font-semibold text-white transition-all"
+              >
+                ¿Qué es FLISoL?
+              </a>
+            </div>
+
+            <div className="grid grid-cols-4 gap-3 sm:gap-4 w-full max-w-[22rem] mt-6">
               {[
                 { val: timeLeft.days, label: 'Días' },
                 { val: timeLeft.hours, label: 'Horas' },
-                { val: timeLeft.minutes, label: 'Min' },
-                { val: timeLeft.seconds, label: 'Seg' },
+                { val: timeLeft.minutes, label: 'Minutos' },
+                { val: timeLeft.seconds, label: 'Segundos' },
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="group/c relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-3 sm:p-5 text-center"
+                  className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-zinc-900/50 p-4 transition-colors hover:border-white/20"
                 >
-                  <div className="font-display text-3xl sm:text-5xl font-black text-white tabular-nums tracking-tighter">
+                  <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums tracking-tight mb-1">
                     {String(item.val).padStart(2, '0')}
                   </div>
-                  <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-zinc-600 transition-colors group-hover/c:text-flisol-orange">
+                  <div className="text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                     {item.label}
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-flisol-orange/40 to-transparent opacity-0 transition-opacity group-hover/c:opacity-100" />
                 </div>
               ))}
             </div>
-          </motion.div>
 
+          </motion.div>
         </div>
       </motion.div>
     </section>

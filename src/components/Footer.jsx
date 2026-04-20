@@ -87,7 +87,7 @@ function Footer() {
               <a href={`mailto:${EVENT.contactEmail}`} className="block truncate text-sm font-bold text-white transition-colors hover:text-flisol-orange">
                 {EVENT.contactEmail}
               </a>
-              <p className="text-[10px] uppercase tracking-widest text-zinc-500">Torre Arequipa, Lima - PE</p>
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500">UTP Torre Arequipa, Lima - PE</p>
             </div>
           </div>
 

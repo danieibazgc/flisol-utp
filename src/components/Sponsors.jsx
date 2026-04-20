@@ -59,13 +59,10 @@ function Sponsors() {
         {/* Header compacto */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-4">
-            <motion.div variants={itemVariants} className="flex items-center gap-4 text-flisol-orange">
-              <div className="h-px w-12 bg-flisol-orange/50" />
-              <span className={typography.sectionLabel}>Nuestros Aliados</span>
-            </motion.div>
+
             <motion.h2 variants={itemVariants} className={typography.sectionTitle}>
-              IMPULSANDO LA <br />
-              <span className="outline-text text-white/20 uppercase">LIBERTAD</span>
+              NUESTROS <br />
+              <span className="outline-text text-white/20 uppercase">ALIADOS</span>
             </motion.h2>
           </div>
 

@@ -60,7 +60,7 @@ function TicketGenerator() {
         ctx.beginPath()
         ctx.arc(circleX, circleY, circleR, 0, Math.PI * 2)
         ctx.clip()
-        
+
         const aspect = photoImg.width / photoImg.height
         let sw, sh, sx, sy
         if (aspect > 1) {
@@ -82,11 +82,11 @@ function TicketGenerator() {
       function drawText(ctx, w, h) {
         const nameY = h * 0.52 + w * 0.18 + 130
         const displayName = (name || 'TU NOMBRE').toUpperCase()
-        
+
         ctx.font = 'bold 54px Outfit, sans-serif'
         ctx.textAlign = 'center'
         const textWidth = ctx.measureText(displayName).width + 100
-        
+
         ctx.fillStyle = '#f97316'
         ctx.beginPath()
         ctx.roundRect((w - textWidth) / 2, nameY - 60, textWidth, 100, 50)
@@ -119,10 +119,10 @@ function TicketGenerator() {
 
   const handleShare = () => {
     handleDownload()
-    
+
     // El alert detiene la ejecución hasta que el usuario le de "Aceptar"
     alert('¡Imagen descargada! En LinkedIn, adjunta tu imagen.')
-    
+
     const shareText = `Este 25 de abril seré parte de FLISoL UTP 2026, un espacio para aprender, compartir y conectar alrededor del software libre.\n\n¡Nos vemos en las charlas!\n\n#FlisolUTP #LeadUTP`
     const linkedinUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(shareText)}`
     window.open(linkedinUrl, '_blank')
@@ -132,8 +132,8 @@ function TicketGenerator() {
     <section id="generar-pase">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -141,11 +141,11 @@ function TicketGenerator() {
           >
             <div className="space-y-4">
               <h2 className={typography.sectionTitle}>
-                Tu entrada al <br />
-                <span className="text-flisol-orange">Futuro Libre</span>
+                Genera tu pase a <br />
+                <span className="text-flisol-orange">FLISoL UTP 2026</span>
               </h2>
               <p className="text-zinc-400 text-base max-w-md">
-                Personaliza tu credencial oficial, descárgala y únete a la comunidad más grande de Software Libre en Lima.
+                Sube tu foto, personaliza tu entrada y compártela en tus redes sociales para que todos sepan que serás parte del evento.
               </p>
             </div>
 
@@ -155,7 +155,7 @@ function TicketGenerator() {
                   <Camera className="h-4 w-4 text-flisol-orange" />
                   Sube tu mejor foto
                 </label>
-                <div 
+                <div
                   onClick={() => fileInputRef.current?.click()}
                   className="group relative h-32 w-full cursor-pointer overflow-hidden rounded-3xl border-2 border-dashed border-white/10 bg-white/5 transition-all hover:border-flisol-orange/50 hover:bg-white/10"
                 >
@@ -220,7 +220,7 @@ function TicketGenerator() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}

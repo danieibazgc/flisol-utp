@@ -5,28 +5,28 @@ import { typography } from '../constants/designTokens'
 const activities = [
   {
     title: 'Charlas Magistrales',
-    description: 'Expertos compartiendo conocimiento sobre el futuro del Open Source y la soberanía tecnológica.',
+    description: 'Descubre herramientas open source para potenciar tu perfil profesional.',
     icon: <Terminal className="h-6 w-6" />,
     className: 'md:col-span-2 md:row-span-1',
     color: 'from-flisol-orange/20 to-flisol-orange/5',
   },
   {
     title: 'Talleres Hands-on',
-    description: 'Aprende haciendo. Configura servidores, optimiza kernels y domina herramientas libres.',
+    description: 'Aprende tecnologías reales y tendencias que están transformando la industria.',
     icon: <Code className="h-6 w-6" />,
     className: 'md:col-span-1 md:row-span-2',
     color: 'from-flisol-leadPurple/20 to-flisol-leadPurple/5',
   },
   {
     title: 'Comunidad',
-    description: 'Conéctate con entusiastas y profesionales de toda la región.',
+    description: 'Conecta con estudiantes, desarrolladores y expertos del ecosistema tech',
     icon: <Users className="h-6 w-6" />,
     className: 'md:col-span-1 md:row-span-1',
     color: 'from-flisol-orange/15 to-flisol-leadPurple/10',
   },
   {
     title: 'Hardware Libre',
-    description: 'Explora Arduino, Raspberry Pi y el fascinante mundo del hardware abierto.',
+    description: 'Explora Raspberry Pi y el fascinante mundo del hardware abierto.',
     icon: <Cpu className="h-6 w-6" />,
     className: 'md:col-span-2 md:row-span-1',
     color: 'from-flisol-leadPurple/20 to-flisol-orange/5',
