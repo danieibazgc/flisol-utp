@@ -1,63 +1,128 @@
-import { EVENT } from '../constants/eventData'
+import { motion } from 'framer-motion'
+import { ExternalLink, Sparkles } from 'lucide-react'
+import { typography } from '../constants/designTokens'
+
+const tiers = [
+  {
+    name: 'Venue Partner',
+    logos: [
+      { name: 'UTP', src: '/images/utp.svg', className: 'h-10 sm:h-12' },
+    ],
+    accent: 'text-flisol-leadRed',
+    bg: 'bg-flisol-leadRed/5',
+    border: 'border-flisol-leadRed/20',
+  },
+  {
+    name: 'Sponsor Gold',
+    logos: [
+      { name: 'Placeholder 1', isPlaceholder: true },
+      { name: 'Placeholder 2', isPlaceholder: true },
+    ],
+    accent: 'text-flisol-orange',
+    bg: 'bg-flisol-orange/5',
+    border: 'border-flisol-orange/20',
+  },
+  {
+    name: 'Digital Support',
+    logos: [
+      { name: 'Sessionize', src: '/images/sessionize-logo.svg', className: 'h-8 sm:h-10' },
+    ],
+    accent: 'text-flisol-leadPurple',
+    bg: 'bg-flisol-leadPurple/5',
+    border: 'border-flisol-leadPurple/20',
+  },
+]
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+}
 
 function Sponsors() {
   return (
-    <section className="sponsors relative flex flex-col items-center py-20 text-center">
-      <img
-        src="/images/sponsors-frame.svg"
-        alt=""
-        className="sponsors__frame absolute inset-0 -z-10 h-full w-full object-cover opacity-50"
-        aria-hidden="true"
-      />
-      <h2 className="sponsors__title mb-12 text-4xl font-bold uppercase tracking-wider text-white">Sponsors</h2>
+    <section id="patrocinadores-internal" className="relative px-4 sm:px-6 lg:px-8">
+      {/* Atmospheric Glow */}
+      <div className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] rounded-full bg-flisol-orange/5 blur-[120px]" />
 
-      <div className="mb-12 w-full max-w-4xl">
-        <h3 className="sponsors__tier mb-6 text-2xl font-semibold text-flisol-orange">Gold</h3>
-        <div className="sponsors__logos sponsors__logos--gold flex flex-wrap justify-center gap-8">
-          <div className="sponsors__card relative flex h-40 w-40 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)] transition-all hover:scale-105 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-            <span className="relative z-10 select-none text-sm font-medium text-white/50">Tu logo aquí</span>
-          </div>
-          <div className="sponsors__card relative flex h-40 w-40 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)] transition-all hover:scale-105 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-            <span className="relative z-10 select-none text-sm font-medium text-white/50">Tu logo aquí</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-12 w-full max-w-4xl">
-        <h3 className="sponsors__tier mb-6 text-2xl font-semibold text-flisol-orange">Venue</h3>
-        <div className="sponsors__logos flex flex-wrap justify-center gap-8">
-          <div className="sponsors__card relative flex h-40 w-40 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)] transition-all hover:scale-105 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-            <img
-              src="/images/utp.svg"
-              alt="UTP"
-              className="sponsors__logo sponsors__logo--venue relative z-10 w-24 object-contain"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-16 w-full max-w-4xl">
-        <h3 className="sponsors__tier mb-6 text-2xl font-semibold text-flisol-orange">Support</h3>
-        <div className="sponsors__logos flex flex-wrap justify-center gap-8">
-          <div className="sponsors__card relative flex h-40 w-40 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.15)] transition-all hover:scale-105 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-            <img
-              src="/images/sessionize-logo.svg"
-              alt="Sessionize"
-              className="sponsors__logo sponsors__logo--support relative z-10 w-24 object-contain"
-            />
-          </div>
-        </div>
-      </div>
-
-      <a 
-        href="https://felices25ruth.my.canva.site/brochure-flisol-utp-2026-sponsor"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-white inline-flex items-center justify-center rounded-sm bg-white px-8 py-3 text-sm font-bold uppercase tracking-wider text-black transition-colors hover:bg-gray-200"
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-100px' }}
+        variants={containerVariants}
+        className="relative space-y-10"
       >
-        Quiero ser patrocinador
-      </a>
-      <p className="mt-4 text-sm text-gray-400">leadutp@gmail.com</p>
+        {/* Header compacto */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-4">
+            <motion.div variants={itemVariants} className="flex items-center gap-4 text-flisol-orange">
+              <div className="h-px w-12 bg-flisol-orange/50" />
+              <span className={typography.sectionLabel}>Nuestros Aliados</span>
+            </motion.div>
+            <motion.h2 variants={itemVariants} className={typography.sectionTitle}>
+              IMPULSANDO LA <br />
+              <span className="outline-text text-white/20 uppercase">LIBERTAD</span>
+            </motion.h2>
+          </div>
+
+          {/* CTA inline al header */}
+          <motion.div variants={itemVariants} className="flex flex-col gap-3">
+            <a
+              href="https://felices25ruth.my.canva.site/brochure-flisol-utp-2026-sponsor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-[10px] font-black uppercase tracking-widest text-black transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(255,255,255,0.08)]"
+            >
+              Conviértete en Patrocinador
+              <ExternalLink className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <p className="text-center text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+              leadutp@gmail.com
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Tiers en grid horizontal */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {tiers.map((tier) => (
+            <div key={tier.name} className="space-y-3">
+              {/* Tier label */}
+              <div className="flex items-center gap-3">
+                <span className={`text-[9px] font-bold uppercase tracking-[0.35em] ${tier.accent}`}>{tier.name}</span>
+                <div className="h-px flex-1 bg-white/5" />
+              </div>
+
+              {/* Logos del tier */}
+              <div className="flex flex-wrap gap-3">
+                {tier.logos.map((logo, idx) => (
+                  <motion.div
+                    key={logo.name + idx}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    className={`group flex h-20 flex-1 min-w-[120px] items-center justify-center rounded-2xl border ${tier.border} ${tier.bg} backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/[0.04]`}
+                  >
+                    {logo.isPlaceholder ? (
+                      <div className="flex flex-col items-center gap-2 opacity-20 transition-opacity group-hover:opacity-50">
+                        <Sparkles className="h-4 w-4 text-white" />
+                        <span className="text-[8px] font-bold uppercase tracking-widest text-white">Disponible</span>
+                      </div>
+                    ) : (
+                      <img
+                        src={logo.src}
+                        alt={logo.name}
+                        className={`${logo.className} w-auto object-contain transition-all duration-500 group-hover:brightness-125`}
+                      />
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

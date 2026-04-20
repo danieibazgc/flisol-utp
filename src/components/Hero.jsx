@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowRight, Calendar, MapPin } from 'lucide-react'
 import { EVENT } from '../constants/eventData'
 
 const targetDate = new Date(EVENT.targetDateISO).getTime()
@@ -6,7 +8,6 @@ const targetDate = new Date(EVENT.targetDateISO).getTime()
 function getTimeLeft() {
   const now = Date.now()
   const difference = Math.max(targetDate - now, 0)
-
   return {
     days: Math.floor(difference / (1000 * 60 * 60 * 24)),
     hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
@@ -15,95 +16,125 @@ function getTimeLeft() {
   }
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+}
+
 function Hero() {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(getTimeLeft())
-    }, 1000)
-
+    const interval = setInterval(() => setTimeLeft(getTimeLeft()), 1000)
     return () => clearInterval(interval)
   }, [])
-
-  const timerBlocks = useMemo(
-    () => [
-      { label: 'Días', value: timeLeft.days },
-      { label: 'Horas', value: timeLeft.hours },
-      { label: 'Minutos', value: timeLeft.minutes },
-      { label: 'Segundos', value: timeLeft.seconds },
-    ],
-    [timeLeft],
-  )
 
   return (
     <section
       id="inicio"
-      className="hero-pattern relative overflow-hidden pt-32 sm:pt-36"
+      className="hero-pattern relative overflow-hidden min-h-dvh flex flex-col justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8"
     >
       <div className="hero-gradient-pointer-events absolute inset-0" aria-hidden="true" />
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="order-1 flex justify-center lg:order-1 lg:justify-start animate-slide-in-left delay-200">
-            <img
-              src={EVENT.logoFlisol}
-              alt="Logo oficial del Festival Latinoamericano de Instalación de Software Libre (FLISoL)"
-              className="h-auto w-full max-w-xs sm:max-w-sm lg:max-w-md"
-            />
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative mx-auto w-full max-w-7xl"
+      >
+        {/* Título masivo full-width */}
+        <motion.h1
+          variants={itemVariants}
+          className="mt-8 font-display font-black tracking-tighter leading-[0.82] text-white"
+        >
+          <div className="text-[clamp(4rem,14vw,10rem)]">FLISOL</div>
+          <div className="flex flex-wrap items-end gap-3 sm:gap-5">
+            <span className="text-[clamp(4rem,14vw,10rem)] text-flisol-orange">UTP</span>
+            <span className="outline-text text-white/15 text-[clamp(2.8rem,9vw,6.5rem)] pb-1">
+              LIMA '26
+            </span>
           </div>
+        </motion.h1>
 
-          <div className="order-2 lg:order-2 lg:justify-self-end text-center">
-            <div className="inline-flex animate-pulse rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-zinc-100 sm:text-sm animate-fade-in">
-              {EVENT.dateShort} · UTP Torre Arequipa, Lima, Perú
-            </div>
+        {/* Franja inferior: descripción + CTAs | countdown */}
+        <div className="mt-14 sm:mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-end">
 
-            <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-7xl animate-fade-in-up delay-100">
-              FLISoL <span className="text-flisol-orange">UTP</span> {EVENT.year}
-            </h1>
-
-            <p className="mt-6 text-lg text-zinc-100 sm:text-xl animate-fade-in-up delay-200">
-              {EVENT.fullName}
+          {/* Izquierda: descripción, CTAs, metadata */}
+          <motion.div variants={itemVariants} className="space-y-8">
+            <p className="text-base text-zinc-400 max-w-md leading-relaxed font-light">
+              El mayor festival de Software Libre de Latinoamérica. Charlas, talleres e instalaciones en la Universidad Tecnológica del Perú. Entrada gratuita.
             </p>
 
-            <p className="mt-4 max-w-3xl text-base text-flisol-muted sm:text-lg animate-fade-in-up delay-300">
-              Un día entero de charlas y talleres de software libre.
-              Organizado por {EVENT.organizer}.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center animate-fade-in-up delay-400">
+            <div className="flex flex-wrap gap-4">
               <a
                 href="#registro"
-                className="inline-flex items-center justify-center rounded-full bg-white/10 border border-flisol-orange/60 px-6 py-2.5 text-sm font-semibold text-flisol-orange transition duration-300 hover:scale-105 hover:bg-flisol-orange hover:text-white focus-visible:ring-2 focus-visible:ring-flisol-orange focus-visible:ring-offset-2 focus-visible:ring-offset-flisol-black"
+                className="group inline-flex items-center gap-3 rounded-full bg-flisol-orange px-8 py-3.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-glow transition-all hover:scale-105"
               >
-                Inscríbete →
+                Inscribirme
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </a>
               <a
-                href="#que-es-flisol"
-                className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white transition duration-300 hover:scale-105 hover:border-white"
+                href="#agenda"
+                className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-white/10"
               >
-                ¿Qué es FLISoL?
+                Ver Agenda
               </a>
             </div>
 
-            <div className="mt-10 mx-auto grid w-full max-w-3xl grid-cols-4 gap-2 sm:gap-2.5 animate-fade-in-up delay-500">
-              {timerBlocks.map((item) => (
+            <div className="flex flex-wrap items-center gap-5 pt-4 border-t border-white/5">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-3.5 w-3.5 text-zinc-600" />
+                <span className="text-sm font-bold text-white">25 Abril, 2026</span>
+              </div>
+              <div className="h-4 w-px bg-white/10" />
+              <div className="flex items-center gap-2">
+                <MapPin className="h-3.5 w-3.5 text-zinc-600" />
+                <span className="text-sm font-bold text-white">Torre Arequipa, Lima</span>
+              </div>
+              <div className="h-4 w-px bg-white/10" />
+              <span className="text-sm font-bold text-flisol-orange">Acceso Gratuito</span>
+            </div>
+          </motion.div>
+
+          {/* Derecha: countdown limpio */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-px w-8 bg-flisol-orange/40" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-600">
+                Cuenta regresiva
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
+              {[
+                { val: timeLeft.days, label: 'Días' },
+                { val: timeLeft.hours, label: 'Horas' },
+                { val: timeLeft.minutes, label: 'Min' },
+                { val: timeLeft.seconds, label: 'Seg' },
+              ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 p-2 sm:p-3 text-center shadow-glow transition-all duration-500 hover:border-flisol-orange/40 hover:bg-white/[0.08]"
+                  className="group/c relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-3 sm:p-5 text-center"
                 >
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold tabular-nums text-white" aria-label={`${item.value} ${item.label}`}>
-                    {String(item.value).padStart(2, '0')}
+                  <div className="font-display text-3xl sm:text-5xl font-black text-white tabular-nums tracking-tighter">
+                    {String(item.val).padStart(2, '0')}
                   </div>
-                  <div className="mt-1 text-[9px] sm:text-[11px] uppercase tracking-wide text-flisol-muted">
+                  <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-zinc-600 transition-colors group-hover/c:text-flisol-orange">
                     {item.label}
                   </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-flisol-orange/40 to-transparent opacity-0 transition-opacity group-hover/c:opacity-100" />
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
+
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

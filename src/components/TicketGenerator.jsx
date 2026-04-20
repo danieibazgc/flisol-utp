@@ -1,20 +1,21 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Download, Share2, User, Camera, Briefcase, Sparkles } from 'lucide-react'
+import { typography } from '../constants/designTokens'
 
 const TEMPLATE_SRC = '/images/plantilla-pase.jpg'
-// Template original: 3375 x 4219  →  canvas with higher resolution (4:5 ratio)
 const CANVAS_W = 1600
-const CANVAS_H = 2000 // Maintains 4:5 ratio for high quality download
+const CANVAS_H = 2000
 
 function TicketGenerator() {
   const [name, setName] = useState('')
   const [role, setRole] = useState('')
-  const [photo, setPhoto] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
+  const [photoImg, setPhotoImg] = useState(null)
   const [templateImg, setTemplateImg] = useState(null)
   const fileInputRef = useRef(null)
   const canvasRef = useRef(null)
 
-  // Pre-load the template image once
   useEffect(() => {
     const img = new Image()
     img.onload = () => setTemplateImg(img)
@@ -24,282 +25,221 @@ function TicketGenerator() {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setPhoto(file)
       const reader = new FileReader()
-      reader.onload = (ev) => setPhotoPreview(ev.target.result)
+      reader.onload = (ev) => {
+        setPhotoPreview(ev.target.result)
+        const img = new Image()
+        img.onload = () => setPhotoImg(img)
+        img.src = ev.target.result
+      }
       reader.readAsDataURL(file)
     }
   }
 
   const drawTicket = useCallback(
-    (ctx, canvas, forDownload = false) => {
+    (ctx, canvas) => {
       const w = canvas.width
       const h = canvas.height
-
       ctx.clearRect(0, 0, w, h)
 
-      // Draw template as full background
       if (templateImg) {
         ctx.drawImage(templateImg, 0, 0, w, h)
-      } else {
-        ctx.fillStyle = '#1a1030'
-        ctx.fillRect(0, 0, w, h)
       }
 
-      // --- Photo circle ---
-      // The empty area in the template spans roughly from 38% to 72% of height
       const circleX = w / 2
-      const circleY = h * 0.52  // center of the empty area
-      const circleR = w * 0.18  // radius proportional to width
+      const circleY = h * 0.52
+      const circleR = w * 0.18
 
-      if (photoPreview) {
-        const img = new Image()
-        img.onload = () => {
-          // White/light circle border
-          ctx.beginPath()
-          ctx.arc(circleX, circleY, circleR + 12, 0, Math.PI * 2)
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-          ctx.fill()
-
-          ctx.save()
-          ctx.beginPath()
-          ctx.arc(circleX, circleY, circleR, 0, Math.PI * 2)
-          ctx.clip()
-          // Cover crop
-          const aspect = img.width / img.height
-          let sw, sh, sx, sy
-          if (aspect > 1) {
-            sh = img.height
-            sw = sh
-            sx = (img.width - sw) / 2
-            sy = 0
-          } else {
-            sw = img.width
-            sh = sw
-            sx = 0
-            sy = (img.height - sh) / 2
-          }
-          ctx.drawImage(img, sx, sy, sw, sh, circleX - circleR, circleY - circleR, circleR * 2, circleR * 2)
-          ctx.restore()
-          drawTicketText(ctx, w, h)
-        }
-        img.src = photoPreview
-      } else {
-        // Placeholder circle
+      if (photoImg) {
         ctx.beginPath()
-        ctx.arc(circleX, circleY, circleR + 12, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'
+        ctx.arc(circleX, circleY, circleR + 15, 0, Math.PI * 2)
+        ctx.fillStyle = '#f97316'
         ctx.fill()
 
+        ctx.save()
         ctx.beginPath()
         ctx.arc(circleX, circleY, circleR, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(26, 16, 48, 0.6)'
+        ctx.clip()
+        
+        const aspect = photoImg.width / photoImg.height
+        let sw, sh, sx, sy
+        if (aspect > 1) {
+          sh = photoImg.height; sw = sh; sx = (photoImg.width - sw) / 2; sy = 0
+        } else {
+          sw = photoImg.width; sh = sw; sx = 0; sy = (photoImg.height - sh) / 2
+        }
+        ctx.drawImage(photoImg, sx, sy, sw, sh, circleX - circleR, circleY - circleR, circleR * 2, circleR * 2)
+        ctx.restore()
+        drawText(ctx, w, h)
+      } else {
+        ctx.beginPath()
+        ctx.arc(circleX, circleY, circleR, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
         ctx.fill()
-
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-        ctx.font = '140px Inter, system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText('?', circleX, circleY)
-        ctx.textBaseline = 'alphabetic'
-
-        drawTicketText(ctx, w, h)
+        drawText(ctx, w, h)
       }
 
-      function drawTicketText(ctx, w, h) {
-        // Position name below photo circle
-        const nameY = h * 0.52 + w * 0.18 + 130 // circleY + circleR + spacing
-
-        // Name pill
-        const displayName = name || 'NOMBRE Y APELLIDO'
-        ctx.font = 'bold 52px Inter, system-ui, sans-serif'
+      function drawText(ctx, w, h) {
+        const nameY = h * 0.52 + w * 0.18 + 130
+        const displayName = (name || 'TU NOMBRE').toUpperCase()
+        
+        ctx.font = 'bold 54px Outfit, sans-serif'
         ctx.textAlign = 'center'
-        const nameWidth = ctx.measureText(displayName.toUpperCase()).width + 100
-        const pillX = (w - nameWidth) / 2
-        const pillH = 100
-        const pillY = nameY - pillH / 2 - 12
-
-        // Orange pill background
+        const textWidth = ctx.measureText(displayName).width + 100
+        
         ctx.fillStyle = '#f97316'
         ctx.beginPath()
-        ctx.roundRect(pillX, pillY, nameWidth, pillH, 50)
+        ctx.roundRect((w - textWidth) / 2, nameY - 60, textWidth, 100, 50)
         ctx.fill()
 
         ctx.fillStyle = '#ffffff'
-        ctx.fillText(displayName.toUpperCase(), w / 2, nameY)
+        ctx.fillText(displayName, w / 2, nameY + 10)
 
-        // Role
-        const displayRole = role || 'TU ROL'
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
-        ctx.font = '46px Inter, system-ui, sans-serif'
-        ctx.fillText(displayRole, w / 2, nameY + 88)
+        ctx.font = '42px Outfit, sans-serif'
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+        ctx.fillText(role || 'TU ROL O PROFESIÓN', w / 2, nameY + 90)
       }
     },
-    [name, role, photoPreview, templateImg],
+    [name, role, photoImg, templateImg],
   )
 
-  // Draw canvas whenever data changes
-  const canvasCallback = useCallback(
-    (node) => {
-      if (node) {
-        canvasRef.current = node
-        const ctx = node.getContext('2d')
-        drawTicket(ctx, node)
-      }
-    },
-    [drawTicket],
-  )
+  useEffect(() => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+      drawTicket(ctx, canvasRef.current)
+    }
+  }, [drawTicket])
 
   const handleDownload = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    drawTicket(ctx, canvas, true)
-
-    setTimeout(() => {
-      const link = document.createElement('a')
-      link.download = `pase-flisol-utp-2026.png`
-      link.href = canvas.toDataURL('image/png')
-      link.click()
-    }, 300)
+    const link = document.createElement('a')
+    link.download = `pase-flisol-utp-2026.png`
+    link.href = canvasRef.current.toDataURL('image/png')
+    link.click()
   }
 
   const handleShare = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    // Re-draw to ensure latest state
-    const ctx = canvas.getContext('2d')
-    drawTicket(ctx, canvas, true)
-
-    setTimeout(() => {
-      // 1. Download the image
-      const link = document.createElement('a')
-      link.download = 'pase-flisol-utp-2026.png'
-      link.href = canvas.toDataURL('image/png')
-      link.click()
-
-      // 2. Show popup
-      setTimeout(() => {
-        alert('¡Imagen descargada! En LinkedIn, adjunta tu imagen.')
-
-        // 3. Redirect to LinkedIn with pre-filled text
-        const text = encodeURIComponent(
-          'Este 25 de abril seré parte de FLISoL UTP 2026, un espacio para aprender, compartir y conectar alrededor del software libre.\n¡Nos vemos en las charlas!\n#FlisolUTP #LeadUTP'
-        )
-        window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${text}`, '_blank')
-      }, 500)
-    }, 300)
+    handleDownload()
+    
+    // El alert detiene la ejecución hasta que el usuario le de "Aceptar"
+    alert('¡Imagen descargada! En LinkedIn, adjunta tu imagen.')
+    
+    const shareText = `Este 25 de abril seré parte de FLISoL UTP 2026, un espacio para aprender, compartir y conectar alrededor del software libre.\n\n¡Nos vemos en las charlas!\n\n#FlisolUTP #LeadUTP`
+    const linkedinUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(shareText)}`
+    window.open(linkedinUrl, '_blank')
   }
 
   return (
-    <div className="text-center">
-      <h2 className="text-3xl font-extrabold sm:text-4xl lg:text-5xl">
-        Genera tu pase a{' '}
-        <span className="text-flisol-orange">FLISoL UTP</span>
-      </h2>
-      <p className="mx-auto mt-2 max-w-2xl text-sm text-flisol-muted sm:text-base">
-        Sube tu foto, personaliza tu entrada y compártela en tus redes sociales
-        para que todos sepan que serás parte del evento.
-      </p>
+    <section id="generar-pase">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+          
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex-1 space-y-10"
+          >
+            <div className="space-y-4">
+              <h2 className={typography.sectionTitle}>
+                Tu entrada al <br />
+                <span className="text-flisol-orange">Futuro Libre</span>
+              </h2>
+              <p className="text-zinc-400 text-base max-w-md">
+                Personaliza tu credencial oficial, descárgala y únete a la comunidad más grande de Software Libre en Lima.
+              </p>
+            </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-8 text-left">
-        {/* Form */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">Tus Datos</h3>
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <label className="flex items-center gap-2 text-sm font-bold text-zinc-300">
+                  <Camera className="h-4 w-4 text-flisol-orange" />
+                  Sube tu mejor foto
+                </label>
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="group relative h-32 w-full cursor-pointer overflow-hidden rounded-3xl border-2 border-dashed border-white/10 bg-white/5 transition-all hover:border-flisol-orange/50 hover:bg-white/10"
+                >
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-zinc-500 group-hover:text-zinc-300">
+                    <Sparkles className="h-6 w-6" />
+                    <span className="text-sm font-medium">Click para seleccionar</span>
+                  </div>
+                  {photoPreview && (
+                    <img src={photoPreview} className="absolute inset-0 h-full w-full object-cover opacity-40 blur-sm" />
+                  )}
+                </div>
+              </div>
 
-          {/* Photo upload */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
-              Tu Foto <span className="text-flisol-orange">*</span>
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="hidden"
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-medium text-zinc-200 transition duration-300 hover:border-flisol-orange/50 hover:bg-white/10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {photo ? 'Cambiar imagen' : 'Subir Imagen'}
-            </button>
-            {photo && (
-              <span className="ml-3 text-xs text-flisol-muted">{photo.name}</span>
-            )}
-          </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <User className="h-3 w-3" /> Nombre
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={30}
+                    placeholder="Ej. Juan Pérez"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-white outline-none focus:border-flisol-orange/50 focus:ring-1 focus:ring-flisol-orange/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Briefcase className="h-3 w-3" /> Tu Rol
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={28}
+                    placeholder="Ej. Desarrollador"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-white outline-none focus:border-flisol-orange/50 focus:ring-1 focus:ring-flisol-orange/20 transition-all"
+                  />
+                </div>
+              </div>
 
-          {/* Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
-              Nombre Completo <span className="text-flisol-orange">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="NOMBRE Y APELLIDO"
-              maxLength={28}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-500 outline-none transition duration-300 focus:border-flisol-orange/50 focus:ring-1 focus:ring-flisol-orange/30"
-            />
-          </div>
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <button
+                  onClick={handleDownload}
+                  disabled={!name}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-flisol-orange px-8 py-4 text-sm font-bold text-white shadow-glow transition-all hover:scale-105 active:scale-95 disabled:opacity-30"
+                >
+                  <Download className="h-5 w-5" />
+                  Obtener Pase
+                </button>
+                <button
+                  onClick={handleShare}
+                  disabled={!name}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-sm font-bold text-white transition-all hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-white/5"
+                >
+                  <Share2 className="h-5 w-5" />
+                  Compartir
+                </button>
+              </div>
+            </div>
+          </motion.div>
 
-          {/* Role */}
-          <div className="mb-5">
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
-              Rol o Profesión <span className="text-flisol-orange">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="TU ROL"
-              maxLength={28}
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-500 outline-none transition duration-300 focus:border-flisol-orange/50 focus:ring-1 focus:ring-flisol-orange/30"
-            />
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="flex-1 relative w-full max-w-sm sm:max-w-md"
+          >
+            <div className="absolute -inset-10 bg-flisol-orange/20 blur-[100px] opacity-30 animate-pulse" />
+            <div className="relative rounded-[2.5rem] border border-white/10 bg-zinc-900/80 p-4 backdrop-blur-2xl shadow-2xl">
+              <canvas
+                ref={canvasRef}
+                width={CANVAS_W}
+                height={CANVAS_H}
+                className="w-full h-auto rounded-[2rem] shadow-glow-purple"
+              />
+            </div>
+          </motion.div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              onClick={handleDownload}
-              disabled={!name}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-flisol-orange px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:scale-105 hover:bg-orange-500 disabled:opacity-40 disabled:hover:scale-100"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Descargar Imagen
-            </button>
-            <button
-              onClick={handleShare}
-              disabled={!name}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-flisol-orange/60 bg-white/5 px-6 py-3 text-sm font-semibold text-flisol-orange transition duration-300 hover:scale-105 hover:bg-flisol-orange hover:text-white disabled:opacity-40 disabled:hover:scale-100"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
-              Compartir
-            </button>
-          </div>
-        </div>
-
-        {/* Preview */}
-        <div className="flex items-center justify-center">
-          <canvas
-            ref={canvasCallback}
-            width={CANVAS_W}
-            height={CANVAS_H}
-            className="w-full max-w-xs rounded-2xl shadow-glow"
-          />
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

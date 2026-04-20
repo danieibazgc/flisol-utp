@@ -1,194 +1,148 @@
-import { useEffect, useState, useRef } from 'react'
-import { NAV_LINKS, EVENT } from '../constants/eventData'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X } from 'lucide-react'
+import { EVENT } from '../constants/eventData'
+
+const navLinks = [
+  { name: 'Qué es', href: '#que-es-flisol' },
+  { name: 'Speakers', href: '#speakers' },
+  { name: 'Agenda', href: '#agenda' },
+  { name: 'Actividades', href: '#actividades' },
+  { name: 'Aliados', href: '#patrocinadores' },
+]
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const menuRef = useRef(null)
-  const buttonRef = useRef(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 24)
-    }
-
-    handleScroll()
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
-
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close mobile menu when clicking outside
+  // Lock body scroll when menu is open
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (
-        mobileOpen &&
-        menuRef.current &&
-        !menuRef.current.contains(e.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target)
-      ) {
-        setMobileOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [mobileOpen])
-
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [mobileOpen])
-
-  const closeMobile = () => setMobileOpen(false)
+    if (isOpen) document.body.style.overflow = 'hidden'
+    else document.body.style.overflow = 'unset'
+  }, [isOpen])
 
   return (
-    <header
-      className={`fixed left-0 top-0 z-50 w-full border-b transition-all duration-300 ${
-        scrolled
-          ? 'border-white/10 bg-black/90 backdrop-blur-xl'
-          : 'border-transparent bg-black/25 backdrop-blur-md'
-      }`}
-    >
-      <nav
-        className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8"
-        aria-label="Navegación principal"
+    <nav className="fixed left-0 right-0 top-0 z-[100] flex justify-center p-0 sm:p-4 transition-all duration-500">
+      <motion.div
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className={`relative flex w-full max-w-7xl items-center justify-between border-b sm:border sm:rounded-2xl px-6 py-3 sm:px-8 sm:py-3 transition-all duration-500 ${scrolled
+          ? 'border-white/10 bg-black/60 backdrop-blur-xl shadow-2xl'
+          : 'border-transparent bg-transparent'
+          }`}
       >
-        <a href="#inicio" className="shrink-0" aria-label="Ir al inicio">
+        {/* LOGO OFICIAL */}
+        <a href="#inicio" className="flex items-center gap-3 group relative">
           <img
-            src={EVENT.logoLead}
-            alt="Logo LEAD UTP – comunidad organizadora de FLISoL UTP"
-            className="h-10 w-auto rounded-sm"
+            src={EVENT.logoFlisol}
+            alt="FLISoL UTP"
+            className="h-12 md:h-14 w-auto transition-all group-hover:scale-105"
           />
         </a>
 
-        {/* Desktop nav */}
-        <ul className="hidden items-center gap-6 text-sm text-zinc-200 md:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="transition-colors duration-300 hover:text-flisol-orange"
-              >
-                {link.label}
-              </a>
-            </li>
+        {/* DESKTOP NAV */}
+        <div className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="group relative flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 transition-all hover:text-white"
+            >
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-flisol-orange">[</span>
+              {link.name}
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-flisol-orange">]</span>
+            </a>
           ))}
-        </ul>
+        </div>
 
+        {/* ACTION */}
         <div className="flex items-center gap-3">
           <a
             href="#registro"
-            className="hidden rounded-full border border-flisol-orange/60 bg-white/5 px-4 py-2 text-sm font-semibold text-flisol-orange transition duration-300 hover:scale-105 hover:bg-flisol-orange hover:text-white sm:inline-flex"
+            className="hidden sm:inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-105 shadow-glow hover:bg-flisol-orange hover:text-white"
           >
-            Inscríbete
-          </a>
-          <a
-            href="https://felices25ruth.my.canva.site/brochure-flisol-utp-2026-sponsor"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded-full border border-flisol-orange px-4 py-2 text-sm font-semibold text-white bg-flisol-orange transition duration-300 hover:scale-105 hover:bg-orange-500 sm:inline-flex"
-          >
-            Se Sponsor
+            Inscribirme
           </a>
 
-          {/* Hamburger button */}
           <button
-            ref={buttonRef}
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="relative z-50 flex h-10 w-10 items-center justify-center rounded-lg text-zinc-200 transition-colors hover:text-white md:hidden"
-            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav"
+            onClick={() => setIsOpen(!isOpen)}
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white md:hidden"
           >
-            <div className="flex w-5 flex-col items-center gap-[5px]">
-              <span
-                className={`block h-[2px] w-5 rounded-full bg-current transition-all duration-300 ${
-                  mobileOpen ? 'translate-y-[7px] rotate-45' : ''
-                }`}
-              />
-              <span
-                className={`block h-[2px] w-5 rounded-full bg-current transition-all duration-300 ${
-                  mobileOpen ? 'scale-x-0 opacity-0' : ''
-                }`}
-              />
-              <span
-                className={`block h-[2px] w-5 rounded-full bg-current transition-all duration-300 ${
-                  mobileOpen ? '-translate-y-[7px] -rotate-45' : ''
-                }`}
-              />
-            </div>
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </nav>
+      </motion.div>
 
-      {/* Mobile overlay */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-        aria-hidden="true"
-        onClick={closeMobile}
-      />
+      {/* MINIMALIST MOBILE OVERLAY */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[110] bg-zinc-950/90 backdrop-blur-2xl md:hidden flex flex-col"
+          >
+            {/* Header in Overlay con Logo Restaurado */}
+            <div className="flex items-center justify-between p-6 sm:p-8 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <img
+                  src={EVENT.logoFlisol}
+                  alt="FLISoL UTP"
+                  className="h-12 w-auto transition-all group-hover:scale-105"
+                />
+              </div>
+              <button onClick={() => setIsOpen(false)} className="h-10 w-10 flex items-center justify-center rounded-full bg-white/5 text-zinc-400 border border-white/10">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-      {/* Mobile drawer */}
-      <div
-        ref={menuRef}
-        id="mobile-nav"
-        role="navigation"
-        aria-label="Menú móvil"
-        className={`fixed right-0 top-0 z-50 flex h-dvh w-1/2 min-w-[220px] flex-col overflow-y-auto bg-black transition-transform duration-300 ease-in-out md:hidden ${
-          mobileOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex h-20 items-center px-6">
-          <img
-            src={EVENT.logoFlisol}
-            alt="Logo FLISoL"
-            className="h-8 w-auto"
-          />
-        </div>
+            <div className="flex-1 flex flex-col justify-center px-10 space-y-8">
+              <nav className="space-y-8">
+                {navLinks.map((link, i) => (
+                  <motion.a
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="group flex items-center gap-4"
+                  >
+                    <div className="h-1 w-1 rounded-full bg-flisol-orange opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="font-display text-3xl font-bold text-white tracking-tight active:text-flisol-orange transition-colors">
+                      {link.name}
+                    </span>
+                  </motion.a>
+                ))}
+              </nav>
 
-        <ul className="flex flex-col gap-1 px-4 pt-2">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={closeMobile}
-                className="block rounded-xl px-4 py-3 text-base font-medium text-zinc-200 transition-colors duration-200 hover:bg-white/5 hover:text-flisol-orange"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="pt-10"
               >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+                <a
+                  href="#registro"
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-16 items-center justify-center rounded-2xl bg-white text-black text-xs font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all"
+                >
+                  Inscribirme Ahora
+                </a>
+              </motion.div>
+            </div>
 
-        <div className="mt-auto border-t border-white/10 p-4 flex flex-col gap-3">
-          <a
-            href="#generar-pase"
-            onClick={closeMobile}
-            className="block rounded-full bg-flisol-orange px-6 py-3 text-center text-sm font-semibold text-white transition duration-300 hover:bg-orange-500"
-          >
-            Generar pase →
-          </a>
-          <a
-            href="#registro"
-            onClick={closeMobile}
-            className="block rounded-full border border-flisol-orange/60 bg-white/5 px-6 py-3 text-center text-sm font-semibold text-flisol-orange transition duration-300 hover:bg-flisol-orange hover:text-white"
-          >
-            Inscríbete →
-          </a>
-        </div>
-      </div>
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   )
 }
 

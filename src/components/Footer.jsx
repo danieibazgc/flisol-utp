@@ -1,90 +1,109 @@
+import { motion } from 'framer-motion'
+import { Heart, Globe, Mail, ChevronRight, Cpu } from 'lucide-react'
 import { EVENT } from '../constants/eventData'
+import { typography } from '../constants/designTokens'
+
+const LinkedinIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+)
+
+const InstagramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+)
 
 function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black py-12" role="contentinfo">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 text-center sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <img
-            src={EVENT.logoFlisol}
-            alt="Logo FLISoL – Festival Latinoamericano de Instalación de Software Libre"
-            className="h-10 w-auto rounded-sm"
-          />
-          <img
-            src={EVENT.logoLead}
-            alt="Logo LEAD UTP – comunidad organizadora"
-            className="h-10 w-auto rounded-sm"
-          />
+    <footer className="relative overflow-hidden border-t border-white/5 bg-flisol-black pt-16 pb-10 sm:pt-24 px-4 sm:px-6 lg:px-8">
+      {/* Decorative Atmosphere */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-flisol-orange/30 to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-full bg-gradient-to-t from-flisol-orange/5 to-transparent" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* Editorial Footer Header */}
+        <div className="mb-10 space-y-6">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <h2 className={`${typography.sectionTitleMassive} opacity-20`}>
+              FLISOL UTP <br />
+              <span className="outline-text opacity-10">EDICIÓN 2026</span>
+            </h2>
+
+            <div className="flex flex-col gap-4 lg:text-right">
+              <span className={`${typography.sectionLabel} text-flisol-orange`}>Soberanía Tecnológica</span>
+              <div className="flex gap-2 lg:justify-end">
+                <a href="https://instagram.com/lead_utp" target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 transition-all hover:border-flisol-orange/50 hover:text-white"><InstagramIcon /></a>
+                <a href="https://linkedin.com/company/lead-utp" target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 transition-all hover:border-flisol-orange/50 hover:text-white"><LinkedinIcon /></a>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-zinc-300">
-          <a
-            href={EVENT.flisolInfoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="transition duration-300 hover:text-flisol-orange"
-            aria-label="Visitar sitio oficial de FLISoL"
-          >
-            flisol.info
-          </a>
-          <a
-            href={EVENT.sessionizeUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="transition duration-300 hover:text-flisol-orange"
-            aria-label="Postular como ponente en Sessionize"
-          >
-            sessionize.com/flisol-utp-2026
-          </a>
+        {/* Columns */}
+        <div className="mb-10 grid grid-cols-1 gap-8 border-t border-white/5 pt-8 md:grid-cols-2 lg:grid-cols-4">
+
+          {/* Brand */}
+          <div className="space-y-4">
+            <img src={EVENT.logoFlisol} alt="FLISoL UTP" className="h-12 w-auto" />
+            <p className="text-sm font-light leading-relaxed text-zinc-500">
+              Impulsando la innovación y la libertad digital desde la comunidad estudiantil de la Universidad Tecnológica del Perú.
+            </p>
+          </div>
+
+          {/* Site Map */}
+          <div className="space-y-4">
+            <h4 className={`${typography.sectionLabel} text-zinc-600`}>Nodos del Sitio</h4>
+            <ul className="space-y-3">
+              {['Inicio', 'Speakers', 'Agenda', 'Actividades', 'Patrocinadores'].map((link) => (
+                <li key={link}>
+                  <a href={`#${link.toLowerCase()}`} className="group flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-flisol-orange">
+                    <ChevronRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" /> {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div className="space-y-4">
+            <h4 className={`${typography.sectionLabel} text-zinc-600`}>Recursos Externos</h4>
+            <ul className="space-y-3">
+              <li>
+                <a href={EVENT.flisolInfoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-flisol-orange">
+                  <Globe className="h-4 w-4" /> flisol.info
+                </a>
+              </li>
+              <li>
+                <a href={EVENT.sessionizeUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-flisol-orange">
+                  <Cpu className="h-4 w-4" /> Call for Speakers
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="space-y-4">
+            <h4 className={`${typography.sectionLabel} text-zinc-600`}>Soporte Técnico</h4>
+            <div className="space-y-3 rounded-3xl border border-white/5 bg-white/[0.02] p-5">
+              <a href={`mailto:${EVENT.contactEmail}`} className="block truncate text-sm font-bold text-white transition-colors hover:text-flisol-orange">
+                {EVENT.contactEmail}
+              </a>
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500">Torre Arequipa, Lima - PE</p>
+            </div>
+          </div>
+
         </div>
 
-        <p className="text-sm text-zinc-300">
-          Organizado con amor por {EVENT.organizer} · {EVENT.city}, {EVENT.country} · {EVENT.year}
-        </p>
-        <a
-          href={`mailto:${EVENT.contactEmail}`}
-          className="text-sm text-zinc-400 transition duration-300 hover:text-flisol-orange"
-          aria-label={`Enviar correo a ${EVENT.contactEmail}`}
-        >
-          {EVENT.contactEmail}
-        </a>
-
-        <div className="flex items-center gap-4">
-          <a
-            href="https://www.instagram.com/lead_utp/"
-            target="_blank"
-            rel="noreferrer"
-            className="text-zinc-400 transition duration-300 hover:text-flisol-orange"
-            aria-label="Seguir a LEAD UTP en Instagram"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-            </svg>
-          </a>
-          <a
-            href="https://www.linkedin.com/company/lead-utp"
-            target="_blank"
-            rel="noreferrer"
-            className="text-zinc-400 transition duration-300 hover:text-flisol-orange"
-            aria-label="Seguir a LEAD UTP en LinkedIn"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-            </svg>
-          </a>
+        {/* Bottom bar */}
+        <div className="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 md:flex-row">
+          <div className="flex items-center gap-6 opacity-30 grayscale">
+            <img src={EVENT.logoFlisol} alt="FLISoL" className="h-6 w-auto" />
+            <img src={EVENT.logoLead} alt="LEAD UTP" className="h-6 w-auto" />
+          </div>
+          <p className="flex items-center gap-2 text-xs font-light text-zinc-400">
+            Crafted with <Heart className="h-3 w-3 fill-red-500 text-red-500" /> by LEAD UTP DevTeam
+          </p>
         </div>
+
       </div>
     </footer>
   )

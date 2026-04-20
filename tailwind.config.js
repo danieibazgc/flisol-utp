@@ -29,10 +29,12 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        display: ['Bricolage Grotesque', 'sans-serif'],
+        sans: ['Outfit', 'sans-serif'],
       },
       boxShadow: {
         glow: '0 0 0 1px rgba(249, 115, 22, 0.3), 0 10px 30px rgba(249, 115, 22, 0.15)',
+        'glow-purple': '0 0 0 1px rgba(124, 58, 237, 0.3), 0 10px 30px rgba(124, 58, 237, 0.15)',
       },
       backgroundImage: {
         'lead-gradient': 'linear-gradient(135deg, #E11D48 0%, #7C3AED 100%)',

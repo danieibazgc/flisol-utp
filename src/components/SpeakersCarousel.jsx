@@ -1,374 +1,260 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { speakersData } from '../constants/speakersData.js';
+import { typography } from '../constants/designTokens';
+
+const LinkedinIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+);
+
+const InstagramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+);
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+}
 
 const SpeakersCarousel = () => {
+  const [selectedSpeaker, setSelectedSpeaker] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [touchPosition, setTouchPosition] = useState(null);
-  const [autoplay, setAutoplay] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [selectedSpeaker, setSelectedSpeaker] = useState(null); // Para el Modal
   const carouselRef = useRef(null);
 
-  // Configuración responsive
-  const visibleSlides = {
-    mobile: 1,
-    tablet: 2,
-    desktop: 3
-  };
-
-  const totalSlides = speakersData.length;
-
-  const getVisibleSlidesCount = () => {
-    if (typeof window === 'undefined') return 1;
-    if (window.innerWidth < 768) {
-      return visibleSlides.mobile;
-    } else if (window.innerWidth < 992) {
-      return visibleSlides.tablet;
-    } else {
-      return visibleSlides.desktop;
+  const getScrollAmount = () => {
+    if (carouselRef.current && carouselRef.current.children.length > 0) {
+      return carouselRef.current.children[0].offsetWidth;
     }
+    return 0;
   };
 
-  const [slidesToShow, setSlidesToShow] = useState(getVisibleSlidesCount());
-
-  // Precargar imágenes
-  useEffect(() => {
-    const preloadImages = async () => {
-      const imagePromises = speakersData.map((speaker) => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = speaker.image;
-        });
-      });
-
-      try {
-        await Promise.all(imagePromises);
-      } catch (error) {
-        console.error('Error precargando imágenes:', error);
+  const handleScroll = () => {
+    if (!carouselRef.current) return;
+    const scrollLeft = carouselRef.current.scrollLeft;
+    const itemWidth = getScrollAmount();
+    if (itemWidth > 0) {
+      const newIndex = Math.round(scrollLeft / itemWidth);
+      if (newIndex !== activeIndex) {
+        setActiveIndex(newIndex);
       }
-    };
-    preloadImages();
-  }, []);
-
-  // Update slidesToShow on resize
-  useEffect(() => {
-    const handleResize = () => setSlidesToShow(getVisibleSlidesCount());
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Autoplay functionality
-  useEffect(() => {
-    let interval;
-    // Don't autoplay if a modal is open
-    if (autoplay && !isAnimating && !selectedSpeaker) {
-      interval = setInterval(() => {
-        moveToNextSlide();
-      }, 3000);
     }
+  };
+
+  const scrollToSlide = (index) => {
+    if (!carouselRef.current) return;
+    const itemWidth = getScrollAmount();
+    carouselRef.current.scrollTo({ left: index * itemWidth, behavior: 'smooth' });
+  };
+
+  const nextSlide = () => {
+    if (!carouselRef.current) return;
+    const maxScrollLeft = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+    if (carouselRef.current.scrollLeft >= maxScrollLeft - 10) {
+      carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      carouselRef.current.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    }
+  };
+
+  const prevSlide = () => {
+    if (!carouselRef.current) return;
+    if (carouselRef.current.scrollLeft <= 10) {
+      const maxScrollLeft = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+      carouselRef.current.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+    } else {
+      carouselRef.current.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    if (isPaused || selectedSpeaker) return;
+    const interval = setInterval(() => nextSlide(), 3000);
     return () => clearInterval(interval);
-  }, [activeIndex, autoplay, isAnimating, selectedSpeaker]);
-
-  const pauseAutoplay = () => {
-    setAutoplay(false);
-    setTimeout(() => setAutoplay(true), 8000);
-  };
-
-  const moveToNextSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setActiveIndex((prevIndex) => {
-      const nextIndex = prevIndex + 1;
-      return nextIndex >= totalSlides - slidesToShow + 1 ? 0 : nextIndex;
-    });
-    setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  const moveToPrevSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setActiveIndex((prevIndex) => {
-      const nextIndex = prevIndex - 1;
-      return nextIndex < 0 ? totalSlides - slidesToShow : nextIndex;
-    });
-    setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  const goToSlide = (index) => {
-    if (isAnimating) return;
-    pauseAutoplay();
-    setIsAnimating(true);
-    setActiveIndex(index);
-    setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  const handleTouchStart = (e) => {
-    pauseAutoplay();
-    const touchDown = e.touches[0].clientX;
-    setTouchPosition(touchDown);
-  };
-
-  const handleTouchMove = (e) => {
-    if (touchPosition === null) return;
-    const currentPosition = e.touches[0].clientX;
-    const direction = touchPosition - currentPosition;
-
-    if (direction > 50) {
-      moveToNextSlide();
-      setTouchPosition(null);
-    }
-
-    if (direction < -50) {
-      moveToPrevSlide();
-      setTouchPosition(null);
-    }
-  };
-
-  const handleMouseEnter = () => pauseAutoplay();
-
-  const openModal = (speaker) => {
-    setSelectedSpeaker(speaker);
-    setAutoplay(false); // Detener auto-scroll al abrir el modal
-  };
-
-  const closeModal = () => {
-    setSelectedSpeaker(null);
-    setAutoplay(true);
-  };
+  }, [isPaused, selectedSpeaker]);
 
   return (
-    <div className="py-12 relative">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-transparent bg-clip-text mb-4">
-          Speakers
-        </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          Conoce a los Speakers que nos acompañarán en esta edición y las temáticas que abordarán.
-        </p>
-      </div>
-      
-      <div 
-        className="relative max-w-6xl mx-auto px-12" 
-        ref={carouselRef}
+    <section
+      id="speakers-internal"
+      className="relative overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Editorial Header */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-100px' }}
+        variants={containerVariants}
+        className="mb-12 space-y-6 px-4 sm:px-6 lg:px-8"
       >
-        <button 
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-          onClick={() => { pauseAutoplay(); moveToPrevSlide(); }} 
-          aria-label="Anterior"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 18l-6-6 6-6"></path>
-          </svg>
-        </button>
+        <motion.div variants={itemVariants} className="flex items-center gap-4 text-flisol-orange">
+          <div className="h-px w-12 bg-flisol-orange/50" />
+          <span className={typography.sectionLabel}>Expertos de la Industria</span>
+        </motion.div>
+
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <motion.h2 variants={itemVariants} className={typography.sectionTitle}>
+            LÍDERES DE LA <br />
+            <span className="outline-text text-white/10 uppercase">REVOLUCIÓN</span>
+          </motion.h2>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={containerVariants}
+        className="relative overflow-visible px-14 sm:px-20 lg:px-24 group/carousel"
+      >
+        {/* Navigation Buttons */}
+        <div className="absolute top-1/2 left-1 sm:left-4 lg:left-6 -translate-y-1/2 z-10 flex">
+          <button onClick={prevSlide} className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-white transition-all duration-300 hover:border-flisol-orange hover:bg-flisol-orange shadow-lg">
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        </div>
         
-        <div 
-          className="overflow-hidden"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onMouseEnter={handleMouseEnter}
+        <div className="absolute top-1/2 right-1 sm:right-4 lg:right-6 -translate-y-1/2 z-10 flex">
+          <button onClick={nextSlide} className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-white transition-all duration-300 hover:border-flisol-orange hover:bg-flisol-orange shadow-lg">
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div
+          ref={carouselRef}
+          onScroll={handleScroll}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-8 -mb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
-          <div 
-            className="flex transition-transform duration-300 ease-out"
-            style={{ 
-              transform: `translateX(-${activeIndex * (100 / slidesToShow)}%)`,
-            }}
-          >
-            {speakersData.map((speaker) => (
-              <div 
-                className="flex-shrink-0 px-3 cursor-pointer group" 
-                style={{ width: `${100 / slidesToShow}%` }}
-                key={speaker.id}
-                onClick={() => openModal(speaker)}
+          {speakersData.map((speaker) => (
+            <div key={speaker.id} className="flex-shrink-0 snap-start snap-always px-3 flex justify-center w-full md:w-1/2 lg:w-1/3">
+              <motion.div
+                whileHover={{ y: -10 }}
+                onClick={() => setSelectedSpeaker(speaker)}
+                className="group relative cursor-pointer overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-900/40 p-3 backdrop-blur-md transition-all hover:border-flisol-orange/30 hover:shadow-glow w-full max-w-sm"
               >
-                <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-orange-500/50 transition-colors h-full flex flex-col items-center p-6">
-                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 border-2 border-transparent group-hover:border-orange-500 transition-colors">
-                    <img 
-                      src={speaker.image} 
-                      alt={speaker.name}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
+                <div className="absolute top-4 right-4 z-10">
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 border border-white/10 backdrop-blur-md">
+                    <div className="h-1.5 w-1.5 rounded-full bg-flisol-orange animate-pulse" />
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Speaker</span>
+                  </div>
+                </div>
+
+                <div className="aspect-square overflow-hidden rounded-[2rem] bg-zinc-800 border border-white/5">
+                  <img src={speaker.image} alt={speaker.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-flisol-orange bg-flisol-orange/10 px-2 py-0.5 rounded-md border border-flisol-orange/20">
+                      {speaker.track}
+                    </span>
+
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold text-white group-hover:text-flisol-orange transition-colors">
+                      {speaker.name}
+                    </h3>
+                    <p className="text-sm text-zinc-500 font-light truncate">{speaker.role}</p>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-flisol-orange/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.div>
+            </div>
+          ))}
+        </div>
+
+        {/* Indicators */}
+        <div className="flex justify-center gap-2 mt-12 mb-4">
+          {speakersData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollToSlide(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === activeIndex ? 'w-8 bg-flisol-orange' : 'w-2 bg-white/20 hover:bg-white/40'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {selectedSpeaker && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 bg-flisol-black/95 backdrop-blur-2xl"
+            onClick={() => setSelectedSpeaker(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 40, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.95, y: 40, opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="relative max-w-5xl w-full bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-flisol-orange/10 blur-[120px] rounded-full pointer-events-none" />
+              <button className="absolute top-8 right-8 z-50 h-12 w-12 flex items-center justify-center rounded-full bg-white/5 text-white border border-white/10 hover:bg-flisol-orange transition-all" onClick={() => setSelectedSpeaker(null)}><X className="h-6 w-6" /></button>
+
+              <div className="flex flex-col lg:flex-row h-full max-h-[85vh] overflow-y-auto hide-scrollbar">
+
+                {/* Imagen */}
+                <div className="lg:w-5/12 pt-10 pb-4 px-8 md:p-10 flex items-center justify-center lg:sticky lg:top-0">
+                  <div className="relative">
+                    <div className="absolute -inset-6 bg-flisol-orange/20 blur-3xl rounded-full opacity-40" />
+                    <img
+                      src={selectedSpeaker.image}
+                      alt={selectedSpeaker.name}
+                      className="relative w-44 h-44 sm:w-60 sm:h-60 lg:w-72 lg:h-72 rounded-full object-cover ring-2 ring-flisol-orange/30 shadow-2xl"
                     />
                   </div>
-                  <h3 className="text-xl font-semibold mb-1 text-center">{speaker.name}</h3>
-                  <p className="text-sm text-gray-400 text-center line-clamp-2">{speaker.role}</p>
-                  <p className="text-xs text-orange-400 mt-2 font-medium bg-orange-500/10 px-3 py-1 rounded-full">{speaker.track}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <button 
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-          onClick={() => { pauseAutoplay(); moveToNextSlide(); }} 
-          aria-label="Siguiente"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18l6-6-6-6"></path>
-          </svg>
-        </button>
-      </div>
 
-      {/* Indicadores (Dots) */}
-      <div className="flex justify-center items-center gap-2 mt-8">
-        {Array.from({ length: totalSlides - slidesToShow + 1 }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            aria-label={`Ir a la diapositiva ${index + 1}`}
-            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              activeIndex === index 
-                ? 'w-8 bg-orange-500' 
-                : 'w-2.5 bg-white/20 hover:bg-white/40'
-            }`}
-          />
-        ))}
-      </div>
+                {/* Contenido */}
+                <div className="lg:w-7/12 p-8 md:p-10 lg:pl-0 space-y-8">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <span className="h-px w-8 bg-flisol-orange" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-flisol-orange">Speaker Perfil</span>
+                    </div>
+                    <h3 className="font-display text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tight">
+                      {selectedSpeaker.name.split(' ')[0]} <br />
+                      <span className="text-white/40">{selectedSpeaker.name.split(' ').slice(1).join(' ')}</span>
+                    </h3>
+                    <p className="text-base text-zinc-400 font-light">{selectedSpeaker.role}</p>
+                  </div>
 
-      {/* Modal Popup for Speaker Bio */}
-      {selectedSpeaker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={closeModal}>
-          <div 
-            className="bg-zinc-900 border border-white/10 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button 
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
-              onClick={closeModal}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-            <div className="p-8 md:p-10">
-              <div className="flex flex-col gap-6 items-center mb-8">
-                <div className="w-40 h-40 rounded-full overflow-hidden shrink-0 border-4 border-zinc-800 shadow-xl">
-                  <img 
-                    src={selectedSpeaker.image} 
-                    alt={selectedSpeaker.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="text-center">
-                  <h3 className="text-3xl font-bold mb-2">{selectedSpeaker.name}</h3>
-                  <p className="text-orange-400 font-medium text-lg mb-4">{selectedSpeaker.role}</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    <a 
-                      href={selectedSpeaker.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-full hover:bg-blue-600/30 transition-colors text-sm font-medium"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                      </svg>
-                      LinkedIn
-                    </a>
-                    {selectedSpeaker.instagram && (
-                      <a 
-                        href={selectedSpeaker.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-pink-600/20 text-pink-400 rounded-full hover:bg-pink-600/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                        Instagram
-                      </a>
-                    )}
-                    {selectedSpeaker.youtube && (
-                      <a 
-                        href={selectedSpeaker.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-red-600/20 text-red-500 rounded-full hover:bg-red-600/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                        </svg>
-                        YouTube
-                      </a>
-                    )}
-                    {selectedSpeaker.tiktok && (
-                      <a 
-                        href={selectedSpeaker.tiktok}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600/20 text-gray-200 rounded-full hover:bg-gray-600/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v3.96c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.96-.6 3.92-1.74 5.48-1.56 2.1-4.04 3.37-6.66 3.32-3.14-.05-6.13-1.92-7.51-4.75-1.04-2.14-1.09-4.71-.05-6.85 1.05-2.26 3.12-3.9 5.56-4.32v4c-1.28.23-2.5.94-3.23 2.01-.73 1.07-1.04 2.45-.64 3.66.41 1.25 1.5 2.27 2.77 2.62 1.34.37 2.82.09 3.93-.72 1.12-.81 1.78-2.19 1.78-3.57V0h3.91z"/>
-                        </svg>
-                        TikTok
-                      </a>
-                    )}
-                    {selectedSpeaker.web && (
-                      <a 
-                        href={selectedSpeaker.web}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600/20 text-teal-400 rounded-full hover:bg-teal-600/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <line x1="2" y1="12" x2="22" y2="12"></line>
-                          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                        </svg>
-                        Sitio Web
-                      </a>
-                    )}
-                    {selectedSpeaker.facebook && (
-                      <a 
-                        href={selectedSpeaker.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700/20 text-blue-500 rounded-full hover:bg-blue-700/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
-                        </svg>
-                        Facebook
-                      </a>
-                    )}
-                    {selectedSpeaker.email && (
-                      <a 
-                        href={`mailto:${selectedSpeaker.email}`}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-600/20 text-yellow-400 rounded-full hover:bg-yellow-600/30 transition-colors text-sm font-medium"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                          <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        Contacto
-                      </a>
-                    )}
+                  <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-flisol-orange/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-flisol-orange">
+                      {selectedSpeaker.track}
+                    </div>
+                    <h4 className="font-display text-xl sm:text-2xl font-bold text-white leading-tight">{selectedSpeaker.sessionTitle}</h4>
+                    <p className="text-zinc-400 text-sm leading-relaxed font-light italic">"{selectedSpeaker.sessionDesc}"</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h5 className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-600">Background</h5>
+                    <p className="text-zinc-400 leading-relaxed text-sm font-light">{selectedSpeaker.bio}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pb-8">
+                    {selectedSpeaker.linkedin && <a href={selectedSpeaker.linkedin} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-white text-black hover:bg-flisol-orange hover:text-white transition-all"><LinkedinIcon /><span className="text-[10px] font-bold uppercase tracking-widest">LinkedIn</span></a>}
+                    {selectedSpeaker.instagram && <a href={selectedSpeaker.instagram} target="_blank" rel="noopener noreferrer" className="h-12 px-6 flex items-center gap-3 rounded-full bg-zinc-900 border border-white/10 text-white hover:border-flisol-orange/50 transition-all"><InstagramIcon /><span className="text-[10px] font-bold uppercase tracking-widest">Instagram</span></a>}
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-6 text-gray-300 leading-relaxed">
-                <div>
-                  <h4 className="text-xl font-semibold text-white mb-2">Biografía</h4>
-                  <p className="text-justify">{selectedSpeaker.bio}</p>
-                </div>
-                
-                <div className="bg-white/5 p-6 rounded-xl border border-white/5">
-                  <div className="inline-block px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-xs font-medium mb-3">
-                    {selectedSpeaker.track}
-                  </div>
-                  <h4 className="text-xl font-semibold text-white mb-2">Sesión: {selectedSpeaker.sessionTitle}</h4>
-                  <p className="whitespace-pre-line text-justify">{selectedSpeaker.sessionDesc}</p>
-                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
 };
 
