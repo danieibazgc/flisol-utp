@@ -6,30 +6,35 @@ const tiers = [
   {
     name: 'Venue Partner',
     logos: [
-      { name: 'UTP', src: '/images/utp.svg', className: 'h-10 sm:h-12' },
+      { name: 'UTP', src: '/images/utp.svg', className: 'h-8 sm:h-10' },
     ],
     accent: 'text-flisol-leadRed',
     bg: 'bg-flisol-leadRed/5',
     border: 'border-flisol-leadRed/20',
+    colSpan: 'lg:col-span-1',
+    containerHeight: 'h-20',
   },
   {
-    name: 'Sponsor Gold',
+    name: 'Sponsor Platinum',
     logos: [
-      { name: 'Placeholder 1', isPlaceholder: true },
-      { name: 'Placeholder 2', isPlaceholder: true },
+      { name: 'Hugotech', src: '/images/hugotech-logo.png', className: 'h-14 sm:h-16' },
     ],
     accent: 'text-flisol-orange',
     bg: 'bg-flisol-orange/5',
     border: 'border-flisol-orange/20',
+    colSpan: 'lg:col-span-2',
+    containerHeight: 'h-24 sm:h-28',
   },
   {
     name: 'Digital Support',
     logos: [
-      { name: 'Sessionize', src: '/images/sessionize-logo.svg', className: 'h-8 sm:h-10' },
+      { name: 'Sessionize', src: '/images/sessionize-logo.svg', className: 'h-7 sm:h-9' },
     ],
     accent: 'text-flisol-leadPurple',
     bg: 'bg-flisol-leadPurple/5',
     border: 'border-flisol-leadPurple/20',
+    colSpan: 'lg:col-span-1',
+    containerHeight: 'h-20',
   },
 ]
 
@@ -84,9 +89,9 @@ function Sponsors() {
         </div>
 
         {/* Tiers en grid horizontal */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-4 lg:grid-cols-4">
           {tiers.map((tier) => (
-            <div key={tier.name} className="space-y-3">
+            <div key={tier.name} className={`space-y-3 ${tier.colSpan || ''}`}>
               {/* Tier label */}
               <div className="flex items-center gap-3">
                 <span className={`text-[9px] font-bold uppercase tracking-[0.35em] ${tier.accent}`}>{tier.name}</span>
@@ -99,7 +104,7 @@ function Sponsors() {
                   <motion.div
                     key={logo.name + idx}
                     whileHover={{ y: -3, scale: 1.02 }}
-                    className={`group flex h-20 flex-1 min-w-[120px] items-center justify-center rounded-2xl border ${tier.border} ${tier.bg} backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/[0.04]`}
+                    className={`group flex ${tier.containerHeight || 'h-20'} flex-1 min-w-[120px] items-center justify-center rounded-2xl border ${tier.border} ${tier.bg} backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/[0.04]`}
                   >
                     {logo.isPlaceholder ? (
                       <div className="flex flex-col items-center gap-2 opacity-20 transition-opacity group-hover:opacity-50">

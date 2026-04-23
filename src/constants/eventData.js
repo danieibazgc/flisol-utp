@@ -34,6 +34,8 @@ export const EVENT = {
   flisolOfficialUrl: 'https://flisol.info/FLISOL2026/Peru/Lima-UTP',
   flisolInfoUrl: 'https://flisol.info',
   websiteUrl: 'https://flisolutp.tech',
+  leadInstagramUrl: 'https://www.instagram.com/lead_utp/',
+  leadLinkedinUrl: 'https://www.linkedin.com/company/lead-utp/',
 
   // Call for Speakers
   cfpDeadline: '15 de abril de 2026',

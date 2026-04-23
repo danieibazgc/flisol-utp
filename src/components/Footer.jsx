@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion'
-import { Heart, Globe, Mail, ChevronRight, Cpu } from 'lucide-react'
+import { Heart, Globe, ChevronRight, Cpu } from 'lucide-react'
 import { EVENT } from '../constants/eventData'
 import { typography } from '../constants/designTokens'
 
@@ -13,40 +12,46 @@ const InstagramIcon = () => (
 
 function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/5 bg-flisol-black pt-16 pb-10 sm:pt-24 px-4 sm:px-6 lg:px-8">
+    <footer className="relative overflow-hidden border-t border-white/5 bg-flisol-black pb-10 px-4 sm:px-6 lg:px-8">
       {/* Decorative Atmosphere */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-flisol-orange/30 to-transparent" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-full bg-gradient-to-t from-flisol-orange/5 to-transparent" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Editorial Footer Header */}
-        <div className="mb-10 space-y-6">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <h2 className={`${typography.sectionTitleMassive} opacity-20`}>
-              FLISOL UTP <br />
-              <span className="outline-text opacity-10">EDICIÓN 2026</span>
-            </h2>
-
-            <div className="flex flex-col gap-4 lg:text-right">
-              <span className={`${typography.sectionLabel} text-flisol-orange`}>Soberanía Tecnológica</span>
-              <div className="flex gap-2 lg:justify-end">
-                <a href="https://instagram.com/lead_utp" target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 transition-all hover:border-flisol-orange/50 hover:text-white"><InstagramIcon /></a>
-                <a href="https://linkedin.com/company/lead-utp" target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 transition-all hover:border-flisol-orange/50 hover:text-white"><LinkedinIcon /></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Columns */}
         <div className="mb-10 grid grid-cols-1 gap-8 border-t border-white/5 pt-8 md:grid-cols-2 lg:grid-cols-4">
 
           {/* Brand */}
           <div className="space-y-4">
-            <img src={EVENT.logoFlisol} alt="FLISoL UTP" className="h-12 w-auto" />
+            <div className="flex items-center gap-4">
+              <img src={EVENT.logoFlisol} alt="FLISoL UTP" className="h-12 w-auto" />
+              <img src={EVENT.logoLead} alt="LEAD UTP" className="h-12 w-auto" />
+            </div>
             <p className="text-sm font-light leading-relaxed text-zinc-500">
-              Impulsando la innovación y la libertad digital desde la comunidad estudiantil de la Universidad Tecnológica del Perú.
+              Impulsando el conocimiento abierto, la colaboración tecnológica y el espíritu innovador con una visión comprometida con el futuro digital.
             </p>
+            {/* Social Links */}
+            <div className="flex items-center gap-3 pt-1">
+              <a
+                href={EVENT.leadInstagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de LEAD UTP"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 transition-all duration-300 hover:border-flisol-orange/40 hover:bg-flisol-orange/10 hover:text-flisol-orange hover:scale-110"
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href={EVENT.leadLinkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn de LEAD UTP"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 transition-all duration-300 hover:border-flisol-orange/40 hover:bg-flisol-orange/10 hover:text-flisol-orange hover:scale-110"
+              >
+                <LinkedinIcon />
+              </a>
+            </div>
           </div>
 
           {/* Site Map */}
@@ -94,11 +99,7 @@ function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 md:flex-row">
-          <div className="flex items-center gap-6 opacity-30 grayscale">
-            <img src={EVENT.logoFlisol} alt="FLISoL" className="h-6 w-auto" />
-            <img src={EVENT.logoLead} alt="LEAD UTP" className="h-6 w-auto" />
-          </div>
+        <div className="flex flex-col items-center justify-center gap-2 border-t border-white/5 pt-8">
           <p className="flex items-center gap-2 text-xs font-light text-zinc-400">
             Crafted with <Heart className="h-3 w-3 fill-red-500 text-red-500" /> by LEAD UTP DevTeam
           </p>

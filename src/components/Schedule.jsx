@@ -97,7 +97,7 @@ function Schedule() {
         {/* Compact List */}
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Header de columnas — solo desktop */}
-          <div className="mb-3 hidden grid-cols-[140px_90px_1fr_200px] gap-6 border-b border-white/5 pb-3 sm:grid">
+          <div className="mb-3 hidden grid-cols-[140px_90px_1fr_260px] gap-6 border-b border-white/5 pb-3 sm:grid">
             <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-700">Hora</span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-700">Tipo</span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-700">Sesión</span>
@@ -120,45 +120,63 @@ function Schedule() {
                 className={`group border-b border-white/5 transition-colors duration-200 ${isBreak ? 'opacity-50' : ''} ${isTalkWithSpeaker ? 'cursor-pointer' : ''}`}
               >
                 {/* Desktop row */}
-                <div className="hidden grid-cols-[140px_90px_1fr_200px] items-center gap-6 py-5 sm:grid">
+                <div className="hidden grid-cols-[140px_90px_1fr_260px] items-center gap-6 py-5 sm:grid">
                   <span className="font-mono text-sm tabular-nums text-zinc-500">
-                    {item.time.split(' - ')[0]}
+                    {item.time}
                   </span>
 
                   <div className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${style.color} ${style.border} ${style.bg}`}>
                     {item.type}
                   </div>
 
-                  <h3 className="font-display text-xl font-semibold leading-tight text-white transition-colors duration-200 group-hover:text-flisol-orange">
-                    {item.title}
-                  </h3>
+                  <div className="min-w-0">
+                    <h3 className="font-display text-xl font-semibold leading-tight text-white transition-colors duration-200 group-hover:text-flisol-orange">
+                      {item.title}
+                    </h3>
+                    {speaker && speaker.track && (
+                      <span className="mt-1 inline-block text-[10px] font-bold uppercase tracking-wider text-flisol-orange/70">
+                        {speaker.track}
+                      </span>
+                    )}
+                  </div>
 
                   {speaker ? (
                     <div className="flex items-center gap-2.5">
                       <img src={speaker.image} alt={speaker.name} className="h-8 w-8 rounded-full object-cover ring-1 ring-white/10" />
-                      <span className="truncate text-sm text-zinc-400">{speaker.name}</span>
+                      <span className="text-sm leading-tight text-zinc-400">{speaker.name}</span>
                     </div>
                   ) : (
-                    <span className="text-sm text-zinc-700">{item.description ? item.description.slice(0, 40) + '…' : '—'}</span>
+                    <span className="text-sm text-zinc-500">{item.description || '—'}</span>
                   )}
                 </div>
 
                 {/* Mobile row */}
                 <div className="flex flex-col gap-2 py-4 sm:hidden">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs tabular-nums text-zinc-500">{item.time.split(' - ')[0]}</span>
+                    <span className="font-mono text-xs tabular-nums text-zinc-500">{item.time}</span>
                     <div className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${style.color} ${style.border} ${style.bg}`}>
                       {item.type}
                     </div>
                   </div>
-                  <h3 className="font-display text-xl font-semibold leading-snug text-white transition-colors group-hover:text-flisol-orange">
-                    {item.title}
-                  </h3>
-                  {speaker && (
+                  <div>
+                    <h3 className="font-display text-xl font-semibold leading-snug text-white transition-colors group-hover:text-flisol-orange">
+                      {item.title}
+                    </h3>
+                    {speaker && speaker.track && (
+                      <span className="mt-1 inline-block text-[10px] font-bold uppercase tracking-wider text-flisol-orange/70">
+                        {speaker.track}
+                      </span>
+                    )}
+                  </div>
+                  {speaker ? (
                     <div className="flex items-center gap-2">
                       <img src={speaker.image} alt={speaker.name} className="h-6 w-6 rounded-full object-cover ring-1 ring-white/10" />
                       <span className="text-xs text-zinc-500">{speaker.name}</span>
                     </div>
+                  ) : (
+                    !isBreak && item.description && (
+                      <p className="text-xs text-zinc-500">{item.description}</p>
+                    )
                   )}
                 </div>
               </motion.div>

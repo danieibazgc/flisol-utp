@@ -28,14 +28,15 @@ function Navbar() {
   }, [isOpen])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] w-full transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl shadow-md' : 'bg-transparent'}`}>
+    <>
+      <nav className={`fixed top-0 left-0 right-0 z-[100] w-full transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl shadow-md' : 'bg-transparent'}`}>
       <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="mx-auto flex w-full max-w-screen-2xl flex-wrap items-center justify-between px-6 py-3 md:px-12 lg:px-16"
       >
         {/* LOGO OFICIAL */}
-        <a href="#inicio" className="flex items-center gap-3 group relative">
+        <a href="#inicio" className="flex items-center gap-3 group relative ml-3 md:ml-6">
           <img
             src="/images/lead-utp-logo.png"
             alt="LEAD UTP"
@@ -59,7 +60,13 @@ function Navbar() {
         </div>
 
         {/* ACTION */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mr-3 md:mr-6">
+          <a
+            href="#pase"
+            className="hidden lg:inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-white/10"
+          >
+            Generar pase
+          </a>
           <a
             href="#registro"
             className="hidden sm:inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-105 shadow-glow hover:bg-flisol-orange hover:text-white"
@@ -75,6 +82,7 @@ function Navbar() {
           </button>
         </div>
       </motion.div>
+    </nav>
 
       {/* MINIMALIST MOBILE OVERLAY */}
       <AnimatePresence>
@@ -84,7 +92,7 @@ function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[110] bg-zinc-950/90 backdrop-blur-2xl md:hidden flex flex-col"
+            className="fixed inset-0 z-[110] bg-flisol-black md:hidden flex flex-col"
           >
             {/* Header in Overlay con Logo Restaurado */}
             <div className="flex items-center justify-between p-6 sm:p-8 border-b border-white/5">
@@ -124,8 +132,15 @@ function Navbar() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="pt-10"
+                className="pt-10 flex flex-col gap-4"
               >
+                <a
+                  href="#pase"
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-16 items-center justify-center rounded-2xl border border-white/20 text-white text-xs font-black uppercase tracking-[0.2em] active:scale-95 transition-all hover:bg-white/5"
+                >
+                  Generar Pase
+                </a>
                 <a
                   href="#registro"
                   onClick={() => setIsOpen(false)}
@@ -139,7 +154,7 @@ function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   )
 }
 

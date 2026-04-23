@@ -50,34 +50,34 @@ function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Logo a la izquierda */}
           <motion.div variants={itemVariants} className="flex justify-center lg:justify-end pr-0 lg:pr-8">
-            <img 
-              src="/images/flisol-utp-logo.png" 
-              alt="FLISoL UTP 2026" 
-              className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px]" 
+            <img
+              src="/images/flisol-utp-logo.png"
+              alt="FLISoL UTP 2026"
+              className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px]"
             />
           </motion.div>
 
           {/* Información a la derecha */}
           <motion.div variants={itemVariants} className="flex flex-col items-center text-center space-y-8 lg:items-center">
-            
+
             <div className="inline-flex items-center rounded-3xl border border-white/10 bg-white/5 px-5 py-2 text-xs font-medium text-zinc-300">
               25 de abril · UTP Torre Arequipa, Lima, Perú
             </div>
 
             <div className="space-y-4">
-              <h1 className="font-display leading-none tracking-tight text-white mb-6">
-                <div className="text-6xl sm:text-7xl lg:text-[5.5rem] font-bold">
+              <h1 className="font-display leading-[0.85] tracking-tighter text-white mb-6">
+                <div className="text-5xl sm:text-6xl lg:text-[5rem] font-bold">
                   FLISoL <span className="text-flisol-orange">UTP</span>
                 </div>
-                <div className="text-6xl sm:text-7xl lg:text-[5.5rem] font-bold mt-2">
+                <div className="text-5xl sm:text-6xl lg:text-[5rem] font-bold mt-2 outline-text text-white/10 uppercase">
                   2026
                 </div>
               </h1>
-              
+
               <p className="text-lg sm:text-xl font-medium text-zinc-200 px-4">
                 Festival Latinoamericano de Instalación de Software Libre
               </p>
-              
+
               <p className="text-sm sm:text-base text-zinc-400 max-w-sm mx-auto leading-relaxed">
                 Un día entero de charlas y talleres de software libre.<br />
                 Organizado por LEAD UTP.
@@ -87,16 +87,16 @@ function Hero() {
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <a
                 href="#registro"
-                className="group inline-flex items-center gap-2 rounded-full border border-flisol-orange bg-flisol-orange/10 hover:bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-flisol-orange transition-all"
+                className="group inline-flex items-center justify-center gap-2 rounded-[2rem] bg-flisol-orange hover:bg-orange-600 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-white uppercase transition-all"
               >
-                Inscríbete
-                <ArrowRight className="h-4 w-4" />
+                INSCRIBIRME
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
               </a>
               <a
-                href="#que-es-flisol"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 lg:bg-transparent px-6 py-2.5 hover:bg-white/[0.08] text-sm font-semibold text-white transition-all"
+                href="#agenda"
+                className="inline-flex items-center justify-center gap-2 rounded-[2rem] border border-white/10 bg-zinc-900 hover:bg-white/10 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-white uppercase transition-all"
               >
-                ¿Qué es FLISoL?
+                VER AGENDA
               </a>
             </div>
 
