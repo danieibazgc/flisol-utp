@@ -76,7 +76,7 @@ export const SCHEDULE = [
   },
   {
     time: '10:10am - 10:20am',
-    title: 'Intermedio ☕',
+    title: 'Intermedio',
     description: 'Tiempo de conexión y preparación para la siguiente ponencia.',
     type: 'break',
   },
@@ -100,7 +100,7 @@ export const SCHEDULE = [
   },
   {
     time: '12:20pm - 12:30pm',
-    title: 'Intermedio ☕',
+    title: 'Intermedio',
     description: 'Tiempo de conexión y preparación para la siguiente ponencia.',
     type: 'break',
   },
@@ -112,8 +112,8 @@ export const SCHEDULE = [
   },
   {
     time: '01:20pm - 01:40pm',
-    title: 'Dinámica 2 🎁',
-    description: 'Actividades y sorpresas con los asistentes.',
+    title: 'Coffe Break ☕',
+    description: 'Espacio breve para recargar energías y generar networking entre asistentes.',
     type: 'activity',
   },
   {
@@ -124,7 +124,7 @@ export const SCHEDULE = [
   },
   {
     time: '02:30pm - 02:40pm',
-    title: 'Intermedio ☕',
+    title: 'Intermedio',
     description: 'Tiempo de conexión y preparación para la siguiente ponencia.',
     type: 'break',
   },
@@ -136,7 +136,7 @@ export const SCHEDULE = [
   },
   {
     time: '03:30pm - 03:40pm',
-    title: 'Intermedio ☕',
+    title: 'Intermedio',
     description: 'Tiempo de conexión y preparación para la siguiente ponencia.',
     type: 'break',
   },
@@ -148,7 +148,7 @@ export const SCHEDULE = [
   },
   {
     time: '04:30pm - 04:40pm',
-    title: 'Intermedio ☕',
+    title: 'Intermedio',
     description: 'Tiempo de conexión y preparación para la siguiente ponencia.',
     type: 'break',
   },

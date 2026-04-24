@@ -4,6 +4,17 @@ import { typography } from '../constants/designTokens'
 
 const tiers = [
   {
+    name: 'Sponsor Platinum',
+    logos: [
+      { name: 'Hugotech', src: '/images/hugotech-logo.png', className: 'h-16 sm:h-20 lg:h-28' },
+    ],
+    accent: 'text-flisol-orange',
+    bg: 'bg-flisol-orange/5',
+    border: 'border-flisol-orange/20',
+    colSpan: 'md:col-span-2',
+    containerHeight: 'h-32 sm:h-36 lg:h-44',
+  },
+  {
     name: 'Venue Partner',
     logos: [
       { name: 'UTP', src: '/images/utp.svg', className: 'h-8 sm:h-10' },
@@ -11,19 +22,8 @@ const tiers = [
     accent: 'text-flisol-leadRed',
     bg: 'bg-flisol-leadRed/5',
     border: 'border-flisol-leadRed/20',
-    colSpan: 'lg:col-span-1',
+    colSpan: 'md:col-span-1',
     containerHeight: 'h-20',
-  },
-  {
-    name: 'Sponsor Platinum',
-    logos: [
-      { name: 'Hugotech', src: '/images/hugotech-logo.png', className: 'h-14 sm:h-16' },
-    ],
-    accent: 'text-flisol-orange',
-    bg: 'bg-flisol-orange/5',
-    border: 'border-flisol-orange/20',
-    colSpan: 'lg:col-span-2',
-    containerHeight: 'h-24 sm:h-28',
   },
   {
     name: 'Digital Support',
@@ -33,7 +33,7 @@ const tiers = [
     accent: 'text-flisol-leadPurple',
     bg: 'bg-flisol-leadPurple/5',
     border: 'border-flisol-leadPurple/20',
-    colSpan: 'lg:col-span-1',
+    colSpan: 'md:col-span-1',
     containerHeight: 'h-20',
   },
 ]
@@ -89,7 +89,7 @@ function Sponsors() {
         </div>
 
         {/* Tiers en grid horizontal */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {tiers.map((tier) => (
             <div key={tier.name} className={`space-y-3 ${tier.colSpan || ''}`}>
               {/* Tier label */}
