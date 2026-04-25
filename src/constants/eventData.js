@@ -63,16 +63,10 @@ export const NAV_LINKS = [
 
 export const SCHEDULE = [
   {
-    time: '09:00am - 09:20am',
+    time: '09:00am - 10:10am',
     title: 'Registro y Apertura del evento',
     description: 'Bienvenida por LEAD UTP e información general del día.',
     type: 'opening',
-  },
-  {
-    time: '09:20am - 10:10am',
-    title: 'Flutter Play: Creando Juegos Multiplataforma',
-    description: 'A cargo de Angela Enciso Camacho',
-    type: 'talk',
   },
   {
     time: '10:10am - 10:20am',

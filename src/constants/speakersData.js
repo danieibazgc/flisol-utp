@@ -1,16 +1,5 @@
 export const speakersData = [
   {
-    id: 1,
-    name: "Angela Enciso Camacho",
-    role: "Software Engineer / Flutter Dev",
-    track: "🎮 Videojuegos con Open Source",
-    linkedin: "https://www.linkedin.com/in/angela-irka-enciso-camacho-6394281b6/",
-    image: "https://sessionize.com/image/272d-400o400o1-GuuuskVQUmHhZVVUEi6q1Z.jpg",
-    bio: "Angela Enciso Camacho es Bachiller en Ingeniería de Software con sólida experiencia en análisis de datos y desarrollo de software. A lo largo de su carrera ha trabajado en los sectores comercial e institucional, liderando el desarrollo de nuevos productos digitales y gestionando carteras de clientes con enfoque en metodologías ágiles. Domina múltiples lenguajes de programación y tecnologías modernas, y actualmente se desempeña como desarrolladora freelance, asumiendo proyectos diversos que van desde aplicaciones móviles hasta videojuegos multiplataforma con Flutter. Combina su capacidad técnica con habilidades de trabajo en equipo, adaptabilidad y pensamiento orientado a resultados.",
-    sessionTitle: "Flutter Play: Creando Juegos Multiplataforma",
-    sessionDesc: "Flutter Play es un proyecto enfocado en el desarrollo de videojuegos multiplataforma utilizando Flutter, un framework de código abierto creado por Google que permite construir aplicaciones para Android, iOS, Web, Windows, macOS y Linux a partir de una sola base de código.\n\nEl objetivo de Flutter Play es demostrar cómo Flutter puede utilizarse no solo para aplicaciones móviles tradicionales, sino también para la creación de juegos interactivos, combinando animaciones, gráficos dinámicos y lógica de juego dentro de un entorno moderno de desarrollo."
-  },
-  {
     id: 2,
     name: "Gianpaul Custodio (Aka. HackeMate)",
     role: "Consultor de Seguridad de la Información y Ciberseguridad",
