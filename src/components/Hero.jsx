@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Calendar, MapPin } from 'lucide-react'
+import { ArrowRight, Calendar, MapPin, Radio } from 'lucide-react'
 import { EVENT } from '../constants/eventData'
 
 const targetDate = new Date(EVENT.targetDateISO).getTime()
@@ -94,9 +94,15 @@ function Hero() {
               </a>
               <a
                 href="#agenda"
-                className="inline-flex items-center justify-center gap-2 rounded-[2rem] border border-white/10 bg-zinc-900 hover:bg-white/10 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-white uppercase transition-all"
+                className="group relative inline-flex items-center justify-center gap-2.5 rounded-[2rem] border border-red-500/40 bg-red-500/10 hover:bg-red-500/20 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-red-400 uppercase transition-all"
               >
-                VER AGENDA
+                {/* Pulsing live dot */}
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                </span>
+                <Radio className="h-3.5 w-3.5" strokeWidth={2.5} />
+                VER AGENDA EN VIVO
               </a>
             </div>
 

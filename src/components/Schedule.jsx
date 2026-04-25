@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, MapPin } from 'lucide-react'
 import { SCHEDULE, EVENT } from '../constants/eventData'
@@ -53,8 +53,44 @@ const itemVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
 }
 
+// ─── helpers for live detection ────────────────────────────────────────────
+function parseScheduleTime(timeStr) {
+  // e.g. "09:20am" or "01:40pm"
+  const match = timeStr.match(/(\d{1,2}):(\d{2})(am|pm)/i)
+  if (!match) return null
+  let [, h, m, period] = match
+  h = parseInt(h, 10)
+  m = parseInt(m, 10)
+  if (period.toLowerCase() === 'pm' && h !== 12) h += 12
+  if (period.toLowerCase() === 'am' && h === 12) h = 0
+  return h * 60 + m
+}
+
+function getLiveMinutes() {
+  const now = new Date()
+  return now.getHours() * 60 + now.getMinutes()
+}
+
+function isItemLive(item) {
+  if (item.type !== 'talk') return false
+  const parts = item.time.split(' - ')
+  if (parts.length < 2) return false
+  const start = parseScheduleTime(parts[0].trim())
+  const end = parseScheduleTime(parts[1].trim())
+  if (start === null || end === null) return false
+  const now = getLiveMinutes()
+  return now >= start && now < end
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 function Schedule() {
   const [selectedSpeaker, setSelectedSpeaker] = useState(null)
+  const [currentMinutes, setCurrentMinutes] = useState(getLiveMinutes)
+
+  useEffect(() => {
+    const id = setInterval(() => setCurrentMinutes(getLiveMinutes()), 10_000)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <section id="agenda-internal" className="relative">
@@ -111,19 +147,28 @@ function Schedule() {
             )
             const isBreak = item.type === 'break'
             const isTalkWithSpeaker = item.type === 'talk' && speaker
+            const isLive = currentMinutes >= 0 && isItemLive(item)
 
             return (
               <motion.div
                 key={index}
                 variants={itemVariants}
                 onClick={() => isTalkWithSpeaker && setSelectedSpeaker(speaker)}
-                className={`group border-b border-white/5 transition-colors duration-200 ${isBreak ? 'opacity-50' : ''} ${isTalkWithSpeaker ? 'cursor-pointer' : ''}`}
+                className={`group border-b transition-colors duration-200 ${isBreak ? 'opacity-50' : ''} ${isTalkWithSpeaker ? 'cursor-pointer' : ''} ${isLive ? 'border-red-500/30 bg-red-500/[0.04]' : 'border-white/5'}`}
               >
                 {/* Desktop row */}
                 <div className="hidden grid-cols-[140px_90px_1fr_260px] items-center gap-6 py-5 sm:grid">
-                  <span className="font-mono text-sm tabular-nums text-zinc-500">
-                    {item.time}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {isLive && (
+                      <span className="relative flex h-2 w-2 shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                      </span>
+                    )}
+                    <span className="font-mono text-sm tabular-nums text-zinc-500">
+                      {item.time}
+                    </span>
+                  </div>
 
                   <div className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${style.color} ${style.border} ${style.bg}`}>
                     {item.type}
@@ -153,6 +198,12 @@ function Schedule() {
                 {/* Mobile row */}
                 <div className="flex flex-col gap-2 py-4 sm:hidden">
                   <div className="flex items-center gap-2">
+                    {isLive && (
+                      <span className="relative flex h-2 w-2 shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                      </span>
+                    )}
                     <span className="font-mono text-xs tabular-nums text-zinc-500">{item.time}</span>
                     <div className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${style.color} ${style.border} ${style.bg}`}>
                       {item.type}
