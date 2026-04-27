@@ -61,18 +61,6 @@ function Navbar() {
 
         {/* ACTION */}
         <div className="flex items-center gap-3 mr-3 md:mr-6">
-          <a
-            href="#pase"
-            className="hidden lg:inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-white/10"
-          >
-            Generar pase
-          </a>
-          <a
-            href="#registro"
-            className="hidden sm:inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-all hover:scale-105 shadow-glow hover:bg-flisol-orange hover:text-white"
-          >
-            Inscribirme
-          </a>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -128,27 +116,6 @@ function Navbar() {
                 ))}
               </nav>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="pt-10 flex flex-col gap-4"
-              >
-                <a
-                  href="#pase"
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-16 items-center justify-center rounded-2xl border border-white/20 text-white text-xs font-black uppercase tracking-[0.2em] active:scale-95 transition-all hover:bg-white/5"
-                >
-                  Generar Pase
-                </a>
-                <a
-                  href="#registro"
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-16 items-center justify-center rounded-2xl bg-white text-black text-xs font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all"
-                >
-                  Inscribirme Ahora
-                </a>
-              </motion.div>
             </div>
 
           </motion.div>

@@ -1,20 +1,6 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Calendar, MapPin, Radio } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { EVENT } from '../constants/eventData'
-
-const targetDate = new Date(EVENT.targetDateISO).getTime()
-
-function getTimeLeft() {
-  const now = Date.now()
-  const difference = Math.max(targetDate - now, 0)
-  return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / (1000 * 60)) % 60),
-    seconds: Math.floor((difference / 1000) % 60),
-  }
-}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,12 +13,6 @@ const itemVariants = {
 }
 
 function Hero() {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft)
-
-  useEffect(() => {
-    const interval = setInterval(() => setTimeLeft(getTimeLeft()), 1000)
-    return () => clearInterval(interval)
-  }, [])
 
   return (
     <section
@@ -84,48 +64,22 @@ function Hero() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <a
-                href="#registro"
-                className="group inline-flex items-center justify-center gap-2 rounded-[2rem] bg-flisol-orange hover:bg-orange-600 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-white uppercase transition-all"
-              >
-                INSCRIBIRME
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-              </a>
-              <a
-                href="#agenda"
-                className="group relative inline-flex items-center justify-center gap-2.5 rounded-[2rem] border border-red-500/40 bg-red-500/10 hover:bg-red-500/20 px-8 py-3.5 text-[13px] sm:text-sm font-bold tracking-[0.15em] text-red-400 uppercase transition-all"
-              >
-                {/* Pulsing live dot */}
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
-                </span>
-                <Radio className="h-3.5 w-3.5" strokeWidth={2.5} />
-                VER AGENDA EN VIVO
-              </a>
-            </div>
-
-            <div className="grid grid-cols-4 gap-3 sm:gap-4 w-full max-w-[22rem] mt-6">
-              {[
-                { val: timeLeft.days, label: 'Días' },
-                { val: timeLeft.hours, label: 'Horas' },
-                { val: timeLeft.minutes, label: 'Minutos' },
-                { val: timeLeft.seconds, label: 'Segundos' },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-zinc-900/50 p-4 transition-colors hover:border-white/20"
-                >
-                  <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums tracking-tight mb-1">
-                    {String(item.val).padStart(2, '0')}
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-zinc-500">
-                    {item.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <motion.div
+              variants={itemVariants}
+              className="mt-2 w-full max-w-md rounded-2xl border border-flisol-orange/30 bg-flisol-orange/10 px-6 py-5 text-center"
+            >
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Heart className="h-4 w-4 text-flisol-orange fill-flisol-orange" />
+                <span className="text-xs font-bold uppercase tracking-widest text-flisol-orange">Evento finalizado</span>
+                <Heart className="h-4 w-4 text-flisol-orange fill-flisol-orange" />
+              </div>
+              <p className="text-base sm:text-lg font-semibold text-white leading-snug">
+                ¡Gracias por ser parte del FLISoL UTP 2026!
+              </p>
+              <p className="mt-1.5 text-sm text-zinc-400 leading-relaxed">
+                Fue un día increíble de aprendizaje y comunidad. Nos vemos en la próxima edición. 🐧
+              </p>
+            </motion.div>
 
           </motion.div>
         </div>
